@@ -12,12 +12,17 @@ import { useEffect, useState } from "react";
 const images = [hero1, hero2, hero3, hero4, hero5, hero6, hero7];
 
 export default function Hero() {
-  const [index, setIndex] = useState(0);
+  const randomIndex = Math.floor(Math.random() * images.length);
+  const [index, setIndex] = useState(randomIndex);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setIndex((prev) => {
-        return prev + 1 >= images.length ? 0 : prev + 1;
+        // Ensure the next index is not the same as the current one
+        if(randomIndex === prev) {
+          return prev + 1 >= images.length ? prev - 1 : prev + 1;
+        }
+        return randomIndex;
       });
     }, 8000);
     return () => clearInterval(interval);
