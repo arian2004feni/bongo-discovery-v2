@@ -46,6 +46,23 @@ const Navbar = () => {
   const toggleTheme = () => {
     setTheme((prev) => (prev === "dark" ? "light" : "dark"));
   };
+
+  const links = (
+    <>
+      <li>
+        <NavLink to="/">Home</NavLink>
+      </li>
+      <li>
+        <NavLink to="/community">Community</NavLink>
+      </li>
+      <li>
+        <NavLink to="/about">About Us</NavLink>
+      </li>
+      <li>
+        <NavLink to="/trips">Trips</NavLink>
+      </li>
+    </>
+  );
   return (
     <div className={baseClasses}>
       <div className="navbar justify-between">
@@ -63,7 +80,7 @@ const Navbar = () => {
             </span>
           </div>
         </Link>
-        <div className="flex-none">
+        <div className="flex items-center gap-2">
           <label className="swap text-xl btn btn-ghost btn-circle rounded-full">
             <input type="checkbox" onChange={toggleTheme} />
             <div className="swap-on">
@@ -73,20 +90,7 @@ const Navbar = () => {
               <MdOutlineLightMode />
             </div>
           </label>
-          <ul className="menu text-base menu-horizontal px-1">
-            <li>
-              <NavLink to="/">Home</NavLink>
-            </li>
-            <li>
-              <NavLink to="/community">Community</NavLink>
-            </li>
-            <li>
-              <NavLink to="/about">About Us</NavLink>
-            </li>
-            <li>
-              <NavLink to="/trips">Trips</NavLink>
-            </li>
-          </ul>
+          <ul className="menu text-base menu-horizontal px-1 hidden md:flex">{links}</ul>
         </div>
       </div>
     </div>
