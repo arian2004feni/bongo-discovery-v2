@@ -3,9 +3,12 @@
   themes: light --default, dark --prefersdark;
 }
 
-@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+@theme {
+  --font-heading: "Bebas Neue", sans-serif;
+  --font-paragraph: "Jost", sans-serif;
+}
 
-@import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900');
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
 body {
   font-family: "Jost", sans-serif;

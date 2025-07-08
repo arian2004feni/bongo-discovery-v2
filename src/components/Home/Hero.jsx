@@ -58,7 +58,7 @@ export default function Hero() {
   };
 
   return (
-    <div className="relative w-full h-screen overflow-hidden">
+    <div className="relative w-full h-screen min-h-[750px] overflow-hidden">
       <AnimatePresence>
         <motion.div
           key={index}
@@ -74,17 +74,18 @@ export default function Hero() {
       </AnimatePresence>
 
       {/* Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/50 z-20" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/40 dark:from-[#006A4E]/30 via-black/40 dark:via-[#006A4E]/40 to-black/70 z-20 dark:to-[#006A4E]/50" />
 
       {/* Text Content */}
-      <div className="absolute inset-0 flex items-center justify-center z-30 text-white text-center px-4">
+      <div className="absolute inset-0 flex items-center z-30 text-white px-4">
         <div>
-          <h1 className="text-5xl font-bold mb-4">Bongo Discovery</h1>
-          <p className="mb-6 max-w-xl mx-auto text-xl">
+          <h3 className="uppercase font-heading text-xl">wellcome to <span className="text-[#FFC107]">bongo discovery</span></h3>
+          <h1 className="text-7xl max-w-xl font-heading font-normal mb-4">Find Your Story in <span className="text-[#FFC107]">Bangladesh</span></h1>
+          <p className="mb-6 max-w-xl text-xl">
             Eco-conscious journeys through rivers, forests, and heritage of
             Bangladesh.
           </p>
-          <button className="btn btn-primary">Explore Now</button>
+          <button className="btn bg-[#006A4E] text-white border-none shadow-none">Explore Now</button>
         </div>
       </div>
     </div>
