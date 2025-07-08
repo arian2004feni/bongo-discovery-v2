@@ -18,11 +18,7 @@ export default function Hero() {
   useEffect(() => {
     const interval = setInterval(() => {
       setIndex((prev) => {
-        // Ensure the next index is not the same as the current one
-        if(randomIndex === prev) {
-          return prev + 1 >= images.length ? prev - 1 : prev + 1;
-        }
-        return randomIndex;
+        return prev + 1 >= images.length ? 0 : prev + 1;
       });
     }, 8000);
     return () => clearInterval(interval);
@@ -84,13 +80,20 @@ export default function Hero() {
       {/* Text Content */}
       <div className="absolute inset-0 flex items-center z-30 text-white px-4">
         <div>
-          <h3 className="uppercase font-heading text-xl">wellcome to <span className="text-[#FFC107]">bongo discovery</span></h3>
-          <h1 className="text-7xl max-w-xl font-heading font-normal mb-4">Find Your Story in <span className="text-[#FFC107]">Bangladesh</span></h1>
+          <h3 className="uppercase font-heading text-xl">
+            wellcome to <span className="text-[#FFC107]">bongo discovery</span>
+          </h3>
+          <h1 className="text-7xl max-w-xl font-heading font-normal mb-4">
+            Find Your Story in{" "}
+            <span className="text-[#FFC107]">Bangladesh</span>
+          </h1>
           <p className="mb-6 max-w-xl text-xl">
             Eco-conscious journeys through rivers, forests, and heritage of
             Bangladesh.
           </p>
-          <button className="btn bg-[#006A4E] text-white border-none shadow-none">Explore Now</button>
+          <button className="btn bg-[#006A4E] text-white border-none shadow-none">
+            Explore Now
+          </button>
         </div>
       </div>
     </div>

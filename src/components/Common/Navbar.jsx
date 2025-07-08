@@ -75,7 +75,7 @@ const Navbar = () => {
                 atTop ? "bg-white" : ""
               }`}
             />
-            <span className="ml-2 text-xl">
+            <span className="ml-2 text-2xl font-heading">
               <span>Bongo</span> <span>Discovery</span>
             </span>
           </div>
