@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import logo from "../../assets/logo.png";
 import { Link, NavLink } from "react-router";
 import ThemeToggle from "../theme/ThemeToggle";
+import Auth from "../Auth";
 
 const Navbar = () => {
   const [atTop, setAtTop] = useState(true);
@@ -54,12 +55,17 @@ const Navbar = () => {
       <button
         onClick={() => document.getElementById("login_modal").showModal()}
         className={`btn btn-ghost hover:bg-transparent outline-1 rounded-none -outline-offset-1 ${
-          atTop ? "outline-white" : "outline-black dark:outline-white"
+          atTop
+            ? "outline-white hover:text-white"
+            : "outline-black dark:outline-white"
         }  *:hover:bg-transparent rounded mx-2`}
       >
         Login
       </button>
-      <button className="btn rounded-none border-prime shadow-none bg-prime dark:bg-dark-prime text-prime-content">
+      <button
+        onClick={() => document.getElementById("register_modal").showModal()}
+        className="btn rounded-none border-prime shadow-none bg-prime dark:bg-dark-prime text-prime-content"
+      >
         Register
       </button>
     </>
@@ -88,21 +94,9 @@ const Navbar = () => {
         </div>
         <div className="navbar-end">
           <ThemeToggle />
-          {logins}
+          <Auth atTop={atTop} />
         </div>
       </div>
-      <dialog id="login_modal" className="modal">
-        <div className="modal-box max-w-11/12 h-11/12 text-base-content">
-          <form method="dialog">
-            {/* if there is a button in form, it will close the modal */}
-            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
-              ✕
-            </button>
-          </form>
-          <h3 className="font-bold text-lg">Hello!</h3>
-          <p className="py-4">Press ESC key or click on ✕ button to close</p>
-        </div>
-      </dialog>
     </div>
   );
 };

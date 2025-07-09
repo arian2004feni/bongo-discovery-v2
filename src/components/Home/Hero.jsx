@@ -81,7 +81,7 @@ export default function Hero() {
       <div className="absolute inset-0 flex items-center z-30 text-white px-4">
         <div>
           <h3 className="uppercase font-heading text-xl">
-            wellcome to <span className="text-third">bongo discovery</span>
+            welcome to <span className="text-third">bongo discovery</span>
           </h3>
           <h1 className="text-7xl max-w-xl font-heading font-normal mb-4">
             Find Your Story in{" "}
