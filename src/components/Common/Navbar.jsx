@@ -1,25 +1,20 @@
 import React, { useEffect, useRef, useState } from "react";
 import logo from "../../assets/logo.png";
-import { MdOutlineLightMode } from "react-icons/md";
-import { IoMoonOutline } from "react-icons/io5";
 import { Link, NavLink } from "react-router";
+import ThemeToggle from "../theme/ThemeToggle";
 
 const Navbar = () => {
   const [atTop, setAtTop] = useState(true);
   const [scrollUp, setScrollUp] = useState(true);
-  const [overHero, setOverHero] = useState(true);
   const prevScroll = useRef(0);
   // console.log(prevScroll.current);
 
   useEffect(() => {
-    const heroHeight = 400;
-
     const handleScroll = () => {
       const currentScroll = window.scrollY;
 
       setScrollUp(currentScroll < prevScroll.current);
       setAtTop(currentScroll <= 10);
-      setOverHero(currentScroll < heroHeight);
       prevScroll.current = currentScroll;
     };
 
@@ -38,15 +33,6 @@ const Navbar = () => {
     ${!scrollUp && !atTop ? "-top-20" : "top-0"}
   `; // ${!atTop && overHero ? "" : ""}
 
-  const [theme, setTheme] = useState("light");
-  useEffect(() => {
-    document.documentElement.setAttribute("data-theme", theme);
-    document.documentElement.classList.toggle("dark", theme === "dark");
-  }, [theme]);
-  const toggleTheme = () => {
-    setTheme((prev) => (prev === "dark" ? "light" : "dark"));
-  };
-
   const links = (
     <>
       <li>
@@ -63,10 +49,20 @@ const Navbar = () => {
       </li>
     </>
   );
+  const logins = (
+    <>
+      <li className={`outline-1 -outline-offset-1 ${atTop ? "outline-white" : "outline-black dark:outline-white"}  *:hover:bg-transparent rounded`}>
+        <button>Login</button>
+      </li>
+      <li>
+        <button className="bg-prime dark:bg-dark-prime text-prime-content">Register</button>
+      </li>
+    </>
+  );
   return (
     <div className={baseClasses}>
       <div className="navbar justify-between">
-        <Link className="rounded-lg  flex items-center" to="/">
+        <Link className="rounded-lg navbar-start  flex items-center" to="/">
           <div className="jost flex leading-4 items-center">
             <img
               src={logo}
@@ -80,17 +76,14 @@ const Navbar = () => {
             </span>
           </div>
         </Link>
-        <div className="flex items-center gap-2">
-          <label className="swap text-xl btn btn-ghost btn-circle rounded-full">
-            <input type="checkbox" onChange={toggleTheme} />
-            <div className="swap-on">
-              <IoMoonOutline />
-            </div>
-            <div className="swap-off">
-              <MdOutlineLightMode />
-            </div>
-          </label>
-          <ul className="menu text-base menu-horizontal px-1 hidden md:flex">{links}</ul>
+        <div className="navbar-center flex items-center gap-2">
+          <ul className="menu text-base menu-horizontal px-1 hidden md:flex">
+            {links}
+          </ul>
+        </div>
+        <div className="navbar-end">
+          <ThemeToggle />
+          <ul className="menu menu-lg gap-2 menu-horizontal">{logins}</ul>
         </div>
       </div>
     </div>

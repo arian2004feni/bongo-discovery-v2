@@ -26,13 +26,13 @@ const ServiceSectionData = [
 
 const ServiceSection = () => {
   return (
-    <div className="bg-[#FFC107] py-12">
+    <div className="bg-dark-prime dark:bg-third py-12">
       <div className="mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-0 xl:gap-8 ">
           {ServiceSectionData.map((service, index) => (
             <div
               key={index}
-              className="py-6 px-6 text-black transition-shadow duration-300"
+              className="py-6 px-6 dark:text-black transition-shadow duration-300"
             >
               <div className="flex flex-col gap-2 mb-4">
                 {service.icon}

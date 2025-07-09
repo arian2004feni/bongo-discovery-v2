@@ -3,12 +3,37 @@
   themes: light --default, dark --prefersdark;
 }
 
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
 @theme {
   --font-heading: "Bebas Neue", sans-serif;
   --font-paragraph: "Jost", sans-serif;
-}
+  --color-prime: #007d4f;
+  --color-second: #0a7d9d;
+  --color-third: #ffc107;
+  --color-forth: #616161;
+  --color-bg: #f8f8f8;
+  --color-text: #212121;
+  --color-border: #e0e0e0;
+  --color-prime-content: #ffffff;
+  --color-second-content: #ffffff;
+  --color-third-content: #212121;
+  --color-forth-content: #f8f8f8;
 
-@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+  --color-dark-prime: oklch(65% 0.15 160); /* Vibrant Delta Green: #3CB371 */
+  --color-dark-second: oklch(
+    65% 0.12 210
+  ); /* Electric River Blue: #4682B4 */
+  --color-dark-third: oklch(85% 0.1 95); /* Sunny Gold: #FFD700 */
+  --color-dark-forth: oklch(70% 0 0); /* Light Mist Grey: #B0B0B0 */
+  --color-dark-bg: oklch(8% 0 0); /* Deep Night Sky: #121212 */
+  --color-dark-text: oklch(100% 0 0); /* White text: #FFFFFF */
+  --color-dark-border: oklch(10% 0 0); /* Dark Ash Grey: #333333 */
+  --color-dark-prime-content: oklch(100% 0 0); /* White text on dark prime */
+  --color-dark-second-content: oklch(100% 0 0);
+  --color-dark-third-content: oklch(10% 0 0); 
+  --color-dark-forth-content: oklch(90% 0 0);
+}
 
 body {
   font-family: "Jost", sans-serif;

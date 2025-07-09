@@ -24,8 +24,8 @@ export default function OverviewSection() {
             <motion.div
               initial={{ opacity: 0, y: 150 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1}}
-              viewport={{ once: true, amount: 0.2}}
+              transition={{ duration: 1 }}
+              viewport={{ once: true, amount: 0.2 }}
               className="absolute max-w-4xl z-20 text-center text-white px-4"
             >
               <h2 className="text-6xl font-heading mb-6">
