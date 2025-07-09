@@ -28,7 +28,7 @@ export default function Hero() {
   const imageVariants = {
     initial: {
       opacity: 0.5,
-      scale: 1.08,
+      scale: 1.1,
       filter: "blur(10px)",
       transition: {
         opacity: { duration: 1 },
@@ -42,13 +42,13 @@ export default function Hero() {
       filter: "blur(0px)",
       transition: {
         opacity: { duration: 1 },
-        scale: { duration: 4 },
+        scale: { duration: 6 },
         filter: { duration: 1 },
       },
     },
     exit: {
       opacity: 0.5,
-      scale: 1.08,
+      scale: 1.1,
       filter: "blur(10px)",
       transition: {
         opacity: { duration: 1 },
