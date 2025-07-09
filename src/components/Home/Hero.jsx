@@ -75,7 +75,7 @@ export default function Hero() {
       </AnimatePresence>
 
       {/* Overlay */}
-      <div className="absolute inset-0 bg-[#006A4E]/50 dark:bg-gradient-to-b dark:from-black/50 dark:to-black/60 z-20" />
+      <div className="absolute inset-0 bg-gradient-to-b from-prime/40 to-black/50 dark:from-black/60 dark:to-black/60 z-20" />
 
       {/* Text Content */}
       <div className="absolute inset-0 flex items-center z-30 text-white px-4">

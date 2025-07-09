@@ -51,12 +51,16 @@ const Navbar = () => {
   );
   const logins = (
     <>
-      <li className={`outline-1 -outline-offset-1 ${atTop ? "outline-white" : "outline-black dark:outline-white"}  *:hover:bg-transparent rounded`}>
-        <button>Login</button>
-      </li>
-      <li>
-        <button className="bg-prime dark:bg-dark-prime text-prime-content">Register</button>
-      </li>
+      <button
+        className={`btn btn-ghost hover:bg-transparent outline-1 rounded-none -outline-offset-1 ${
+          atTop ? "outline-white" : "outline-black dark:outline-white"
+        }  *:hover:bg-transparent rounded mx-2`}
+      >
+        Login
+      </button>
+      <button className="btn rounded-none border-prime shadow-none bg-prime dark:bg-dark-prime text-prime-content">
+        Register
+      </button>
     </>
   );
   return (
@@ -83,7 +87,7 @@ const Navbar = () => {
         </div>
         <div className="navbar-end">
           <ThemeToggle />
-          <ul className="menu menu-lg gap-2 menu-horizontal">{logins}</ul>
+          {logins}
         </div>
       </div>
     </div>
