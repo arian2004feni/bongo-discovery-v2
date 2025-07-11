@@ -1,12 +1,39 @@
+import { useForm } from "react-hook-form";
 import test7 from "../../assets/test7.jpg";
+import GoogleLogin from "./GoogleLogin";
+import FormError from "../FormError";
+import useAuth from "../../hooks/useAuth";
+import { updateProfile } from "firebase/auth";
+import { auth } from "../../firebase.init";
 
 const Register = () => {
-  const handleRegister = () => {
-    // e.preventDefault();
+  const { createUser, setUser } = useAuth();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  const onSubmit = ({ name, email, photoUrl, password }) => {
+    createUser(email, password)
+      .then((res) => {
+        const profile = {
+          displayName: name,
+          photoURL: photoUrl,
+        };
+        updateProfile(res.user, profile);
+        const updated = {
+          ...auth.currentUser,
+          displayName: name,
+          photoURL: photoUrl,
+        };
+        setUser(updated);
+      })
+      .catch((err) => console.log(err));
   };
 
   const openLoginModal = () => {
-      document.getElementById("register_modal").close();
+    document.getElementById("register_modal").close();
     document.getElementById("login_modal").showModal();
   };
   return (
@@ -20,9 +47,9 @@ const Register = () => {
 
         <div className="h-full">
           {/* Two-box layout container */}
-          <div className="flex flex-col lg:flex-row overflow-hidden w-full h-full">
+          <div className="flex flex-col lg:flex-row w-full h-full">
             {/* Right Side: Image */}
-            <div className="lg:w-1/2 w-full h-64 lg:h-auto overflow-hidden relative">
+            <div className="lg:w-1/2 w-full h-64 lg:h-auto relative">
               <img
                 src={test7}
                 alt="Vibrant Bangladeshi Culture"
@@ -49,7 +76,7 @@ const Register = () => {
                   Register Here!
                 </h2>
 
-                <form onSubmit={handleRegister} className="space-y-4">
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                   {/* name Input */}
                   <div className="form-control">
                     <label className="label">
@@ -59,8 +86,15 @@ const Register = () => {
                       type="text"
                       placeholder="Your Name"
                       className="input input-bordered w-full"
-                      required
+                      {...register("name", {
+                        required: "Name is required",
+                        minLength: {
+                          value: 3,
+                          message: "Minimum 3 characters",
+                        },
+                      })}
                     />
+                    <FormError error={errors.name} />
                   </div>
                   <div className="form-control">
                     <label className="label">
@@ -69,11 +103,17 @@ const Register = () => {
                       </span>
                     </label>
                     <input
-                      type="url"
                       placeholder="https://example.com/photo.jpg"
                       className="input input-bordered w-full"
-                      required
+                      {...register("photoUrl", {
+                        required: "Photo is required",
+                        minLength: {
+                          value: 3,
+                          message: "Minimum 3 characters",
+                        },
+                      })}
                     />
+                    <FormError error={errors.photoUrl} />
                   </div>
                   <div className="form-control">
                     <label className="label">
@@ -85,8 +125,15 @@ const Register = () => {
                       type="email"
                       placeholder="you@example.com"
                       className="input input-bordered w-full"
-                      required
+                      {...register("email", {
+                        required: "Email is required",
+                        pattern: {
+                          value: /^\S+@\S+\.\S+$/,
+                          message: "Invalid email",
+                        },
+                      })}
                     />
+                    <FormError error={errors.email} />
                   </div>
 
                   {/* Password Input */}
@@ -100,8 +147,15 @@ const Register = () => {
                       type="password"
                       placeholder="••••••••"
                       className="input w-full"
-                      required
+                      {...register("password", {
+                        required: "Password is required",
+                        minLength: { value: 6, message: "Min 6 characters" },
+                        validate: (val) =>
+                          /[A-Z]/.test(val) ||
+                          "Must contain at least one uppercase letter",
+                      })}
                     />
+                    <FormError error={errors.password} />
                   </div>
 
                   {/* Login Button */}
@@ -115,36 +169,7 @@ const Register = () => {
                   </div>
                 </form>
                 <div className="divider text-xs">OR</div>
-                <button className="btn w-full bg-base-100 dark:border-prime text-base-content shadow">
-                  <svg
-                    aria-label="Google logo"
-                    width="16"
-                    height="16"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 512 512"
-                  >
-                    <g>
-                      <path d="m0 0H512V512H0" fill="transparent"></path>
-                      <path
-                        fill="#34a853"
-                        d="M153 292c30 82 118 95 171 60h62v48A192 192 0 0190 341"
-                      ></path>
-                      <path
-                        fill="#4285f4"
-                        d="m386 400a140 175 0 0053-179H260v74h102q-7 37-38 57"
-                      ></path>
-                      <path
-                        fill="#fbbc02"
-                        d="m90 341a208 200 0 010-171l63 49q-12 37 0 73"
-                      ></path>
-                      <path
-                        fill="#ea4335"
-                        d="m153 219c22-69 116-109 179-50l55-54c-78-75-230-72-297 55"
-                      ></path>
-                    </g>
-                  </svg>
-                  Login with Google
-                </button>
+                <GoogleLogin color={"prime"} />
 
                 {/* Register Link */}
                 <div className="text-center mt-6 text-base-content">

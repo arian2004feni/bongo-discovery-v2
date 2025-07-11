@@ -1,8 +1,16 @@
+import { useForm } from "react-hook-form";
 import test8 from "../../assets/test8.jpg";
+import FormError from "../FormError";
 
 const ForgotPass = () => {
-  const handleRecovery = () => {
-    // e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  
+    const onSubmit = (data) => {
+    console.log("Recover Email:", data.email);
   };
 
   const openLoginModal = () => {
@@ -47,7 +55,7 @@ const ForgotPass = () => {
                   Password Recovery!
                 </h2>
 
-                <form onSubmit={handleRecovery} className="space-y-4">
+                <form onSubmit={handleSubmit(onSubmit)}  className="space-y-4">
                   {/* Email Input */}
                   <div className="form-control">
                     <label className="label">
@@ -57,27 +65,17 @@ const ForgotPass = () => {
                     </label>
                     <input
                       type="email"
-                      name="email"
                       placeholder="you@example.com"
                       className="input input-bordered w-full"
-                      required
+                      {...register("email", {
+                        required: "Email is required",
+                        pattern: {
+                          value: /^\S+@\S+\.\S+$/,
+                          message: "Please enter a valid email address",
+                        },
+                      })}
                     />
-                  </div>
-
-                  {/* Password Input */}
-                  <div className="form-control">
-                    <label className="label">
-                      <span className="label-text text-base-content">
-                        Password
-                      </span>
-                    </label>
-                    <input
-                      type="password"
-                      name="password"
-                      placeholder="••••••••"
-                      className="input w-full"
-                      required
-                    />
+                    <FormError error={errors.email} />
                   </div>
 
                   {/* Login Button */}
@@ -86,11 +84,10 @@ const ForgotPass = () => {
                       type="submit"
                       className="btn bg-second text-base-100 w-full shadow-md"
                     >
-                      Login
+                      Send Recovery Link
                     </button>
                   </div>
                 </form>
-                <div className="divider text-xs">OR</div>
 
                 {/* Register Link */}
                 <div className="text-center mt-6 text-base-content">

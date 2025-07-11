@@ -50,43 +50,25 @@ const Navbar = () => {
       </li>
     </>
   );
-  const logins = (
-    <>
-      <button
-        onClick={() => document.getElementById("login_modal").showModal()}
-        className={`btn btn-ghost hover:bg-transparent outline-1 rounded-none -outline-offset-1 ${
-          atTop
-            ? "outline-white hover:text-white"
-            : "outline-black dark:outline-white"
-        }  *:hover:bg-transparent rounded mx-2`}
-      >
-        Login
-      </button>
-      <button
-        onClick={() => document.getElementById("register_modal").showModal()}
-        className="btn rounded-none border-prime shadow-none bg-prime dark:bg-dark-prime text-prime-content"
-      >
-        Register
-      </button>
-    </>
-  );
   return (
     <div className={baseClasses}>
       <div className="navbar justify-between">
-        <Link className="rounded-lg navbar-start  flex items-center" to="/">
-          <div className="jost flex leading-4 items-center">
-            <img
-              src={logo}
-              alt="Logo"
-              className={`h-10 dark:bg-white mask mask-squircle ${
-                atTop ? "bg-white" : ""
-              }`}
-            />
-            <span className="ml-2 text-2xl font-heading">
-              <span>Bongo</span> <span>Discovery</span>
-            </span>
-          </div>
-        </Link>
+        <div className="navbar-start">
+          <Link className="rounded-lg  flex items-center" to="/">
+            <div className="jost flex leading-4 items-center">
+              <img
+                src={logo}
+                alt="Logo"
+                className={`h-10 dark:bg-white mask mask-squircle ${
+                  atTop ? "bg-white" : ""
+                }`}
+              />
+              <span className="ml-2 text-2xl font-heading">
+                <span>Bongo</span> <span>Discovery</span>
+              </span>
+            </div>
+          </Link>
+        </div>
         <div className="navbar-center flex items-center gap-2">
           <ul className="menu text-base menu-horizontal px-1 hidden md:flex">
             {links}
