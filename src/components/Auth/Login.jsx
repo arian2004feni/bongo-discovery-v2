@@ -79,7 +79,7 @@ const Login = () => {
                     <input
                       type="password"
                       name="password"
-                      placeholder="••••••••"
+                      placeholder="******"
                       className="input w-full"
                       required
                     />
@@ -117,6 +117,7 @@ const Login = () => {
                   </div>
                 </form>
                 <div className="divider text-xs">OR</div>
+                {/* Google Login Button */}
                 <button className="btn w-full bg-base-100 dark:border-second text-base-content shadow">
                   <svg
                     aria-label="Google logo"
