@@ -4,10 +4,10 @@ import GoogleLogin from "./GoogleLogin";
 import FormError from "../FormError";
 import useAuth from "../../hooks/useAuth";
 import { updateProfile } from "firebase/auth";
-import { auth } from "../../firebase.init";
+import LoadingPage from "../LoadingAnimation/LoadingPage";
 
 const Register = () => {
-  const { createUser, setUser } = useAuth();
+  const { createUser, setUser, setLoading } = useAuth();
   const {
     register,
     handleSubmit,
@@ -15,21 +15,31 @@ const Register = () => {
   } = useForm();
 
   const onSubmit = ({ name, email, photoUrl, password }) => {
+    setLoading(true);
     createUser(email, password)
       .then((res) => {
+        document.getElementById("register_modal").close();
         const profile = {
           displayName: name,
           photoURL: photoUrl,
         };
-        updateProfile(res.user, profile);
-        const updated = {
-          ...auth.currentUser,
-          displayName: name,
-          photoURL: photoUrl,
-        };
-        setUser(updated);
+        console.log(res.user);
+        updateProfile(res.user, profile)
+          .then(() => {
+            setLoading(false);
+            setUser({
+              uid: res.user.uid,
+              email: res.user.email,
+              displayName: name,
+              photoURL: photoUrl,
+            });
+          })
+          .catch((err) => console.log(err));
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        setLoading(false);
+        console.log(err);
+      });
   };
 
   const openLoginModal = () => {
@@ -46,6 +56,7 @@ const Register = () => {
         </form>
 
         <div className="h-full">
+          <LoadingPage />
           {/* Two-box layout container */}
           <div className="flex flex-col lg:flex-row w-full h-full">
             {/* Right Side: Image */}
@@ -169,7 +180,7 @@ const Register = () => {
                   </div>
                 </form>
                 <div className="divider text-xs">OR</div>
-                <GoogleLogin color={"prime"} />
+                <GoogleLogin color={"prime"} id={"register_modal"} />
 
                 {/* Register Link */}
                 <div className="text-center mt-6 text-base-content">

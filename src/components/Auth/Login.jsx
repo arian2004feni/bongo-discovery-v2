@@ -3,9 +3,10 @@ import test8 from "../../assets/test8.jpg";
 import GoogleLogin from "./GoogleLogin";
 import FormError from "../FormError";
 import useAuth from "../../hooks/useAuth";
+import LoadingPage from "../LoadingAnimation/LoadingPage";
 
 const Login = () => {
-  const { user, signInUser } = useAuth();
+  const { signInUser, setLoading } = useAuth();
   const {
     register,
     handleSubmit,
@@ -13,9 +14,16 @@ const Login = () => {
   } = useForm();
 
   const onSubmit = ({ email, password }) => {
+    setLoading(true)
     signInUser(email, password)
-    .then(() => {})
-    .catch((err) => console.log(err))
+    .then(() => {
+      setLoading(false)
+      document.getElementById("login_modal").close();
+    })
+    .catch((err) => {
+      setLoading(false);
+      console.log(err);
+    })
   };
 
   const openRegisterModal = () => {
@@ -37,6 +45,7 @@ const Login = () => {
         </form>
 
         <div className="w-full h-full">
+              <LoadingPage />
           <div className="flex w-full h-full flex-col lg:flex-row-reverse">
             {/* Left Side: Image */}
             <div className="lg:w-1/2 w-full h-full relative">
@@ -148,7 +157,7 @@ const Login = () => {
                 </form>
                 <div className="divider text-xs">OR</div>
                 {/* Google Login Button */}
-                <GoogleLogin color={"second"} />
+                <GoogleLogin color={"second"} id={'login_modal'} />
 
                 {/* Register Link */}
                 <div className="text-center mt-6 text-base-content">

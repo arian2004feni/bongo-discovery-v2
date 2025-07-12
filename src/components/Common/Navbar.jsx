@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
-import logo from "../../assets/logo.png";
+import { useEffect, useRef, useState } from "react";
 import { Link, NavLink } from "react-router";
+import logo from "../../assets/logo.png";
+import Auth from "../Auth/Auth";
 import ThemeToggle from "../theme/ThemeToggle";
-import Auth from "../Auth";
 
 const Navbar = () => {
   const [atTop, setAtTop] = useState(true);

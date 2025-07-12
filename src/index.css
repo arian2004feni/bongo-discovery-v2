@@ -38,3 +38,7 @@
 body {
   font-family: "Jost", sans-serif;
 }
+
+.modal {
+  z-index: 999; /* or close to it */
+}

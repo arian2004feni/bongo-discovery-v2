@@ -1,16 +1,29 @@
 import { useForm } from "react-hook-form";
 import test8 from "../../assets/test8.jpg";
 import FormError from "../FormError";
+import useAuth from "../../hooks/useAuth";
+import LoadingPage from "../LoadingAnimation/LoadingPage";
 
 const ForgotPass = () => {
+  const { passReset, setLoading } = useAuth();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-  
-    const onSubmit = (data) => {
-    console.log("Recover Email:", data.email);
+
+  const onSubmit = ({ email }) => {
+    setLoading(true);
+    passReset(email)
+      .then(() => {
+        setLoading(false);
+        openLoginModal();
+      })
+      .catch((err) => {
+        setLoading(false);
+        console.log(err);
+      });
   };
 
   const openLoginModal = () => {
@@ -19,7 +32,7 @@ const ForgotPass = () => {
   };
   return (
     <dialog id="forgotPass_modal" className="modal pl-8 pr-4 py-8">
-      <div className="modal-box rounded-none p-0 max-w-10/12 w-full h-full text-base-content bg-base-300">
+      <div className="modal-box rounded-none p-0 max-w-xl w-full h-full text-base-content bg-base-300">
         <form method="dialog">
           <button className="btn btn-md lg:btn-lg btn-circle btn-ghost text-forth hover:bg-white border-none absolute right-2 top-2 z-50">
             ✕
@@ -27,9 +40,10 @@ const ForgotPass = () => {
         </form>
 
         <div className="w-full h-full">
-          <div className="flex w-full h-full flex-col lg:flex-row-reverse">
+              <LoadingPage />
+          <div className="flex w-full h-full flex-col relative lg:flex-row-reverse">
             {/* Left Side: Image */}
-            <div className="lg:w-1/2 w-full h-full relative">
+            <div className="w-full h-full ">
               <img
                 src={test8}
                 alt="scenario image matching the theme"
@@ -49,13 +63,13 @@ const ForgotPass = () => {
             </div>
 
             {/* Right Side: Login Form */}
-            <div className="lg:w-1/2 w-full my-auto">
-              <div className="w-full max-w-9/12 px-10 py-12 mx-auto">
-                <h2 className="text-3xl font-heading tracking-widest sm:text-4xl text-second mb-6 text-center">
+            <div className="absolute inset-0 flex justify-center items-center w-full my-auto">
+              <div className="w-full max-w-9/12 bg-base-100/60 backdrop-blur-2xl px-10 py-12 mx-auto rounded-lg">
+                <h2 className="text-3xl font-heading tracking-widest sm:text-4xl text-second dark:text-white mb-6 text-center">
                   Password Recovery!
                 </h2>
 
-                <form onSubmit={handleSubmit(onSubmit)}  className="space-y-4">
+                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                   {/* Email Input */}
                   <div className="form-control">
                     <label className="label">
@@ -82,7 +96,7 @@ const ForgotPass = () => {
                   <div className="form-control mt-6">
                     <button
                       type="submit"
-                      className="btn bg-second text-base-100 w-full shadow-md"
+                      className="btn border-second/20 bg-second text-white font-normal w-full shadow-md"
                     >
                       Send Recovery Link
                     </button>

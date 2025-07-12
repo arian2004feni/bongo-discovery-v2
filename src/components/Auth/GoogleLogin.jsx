@@ -1,14 +1,18 @@
 import React from "react";
 import useAuth from "../../hooks/useAuth";
 
-const GoogleLogin = ({ color }) => {
-  const { createUserWithGoogle } = useAuth();
+const GoogleLogin = ({ color, id }) => {
+  const { createUserWithGoogle, setLoading } = useAuth();
 
   const handleGoogleLogin = () => {
+    setLoading(true)
     createUserWithGoogle()
       .then(() => {
+        setLoading(false)
+        document.getElementById(id).close();
       })
       .catch((error) => {
+        setLoading(false)
         console.error("Error during Google login:", error);
       });
   };
