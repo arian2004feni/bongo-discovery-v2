@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, NavLink } from "react-router";
+import { Link, NavLink, useLocation } from "react-router";
 import logo from "../../assets/logo.png";
 import Auth from "../Auth/Auth";
 import ThemeToggle from "../theme/ThemeToggle";
@@ -7,32 +7,75 @@ import ThemeToggle from "../theme/ThemeToggle";
 const Navbar = () => {
   const [atTop, setAtTop] = useState(true);
   const [scrollUp, setScrollUp] = useState(true);
+  const [overHero, setOverHero] = useState(true);
   const prevScroll = useRef(0);
   // console.log(prevScroll.current);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const currentScroll = window.scrollY;
+const location = useLocation();
 
-      setScrollUp(currentScroll < prevScroll.current);
-      setAtTop(currentScroll <= 10);
-      prevScroll.current = currentScroll;
-    };
+useEffect(() => {
+  const heroElement = document.querySelector(".hero");
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+  const handleScroll = () => {
+    const currentScroll = window.scrollY;
 
-  const baseClasses = `
-    fixed z-50 w-full transition-all duration-300 
-    ${
-      atTop
-        ? "bg-transparent text-white"
-        : "bg-base-100/60 backdrop-blur-lg shadow"
+    setScrollUp(currentScroll < prevScroll.current);
+    setAtTop(currentScroll <= 10);
+
+    // ✅ Only update overHero if hero exists
+    if (heroElement) {
+      const heroHeight = heroElement.offsetHeight;
+      setOverHero(currentScroll < heroHeight / 2);
+    } else {
+      setOverHero(false); // No hero, so we're always "after hero"
     }
-    
-    ${!scrollUp && !atTop ? "-top-20" : "top-0"}
-  `; // ${!atTop && overHero ? "" : ""}
+
+    prevScroll.current = currentScroll;
+  };
+
+  // Run once to detect on initial render (helps with SSR or router changes)
+  handleScroll();
+
+  window.addEventListener("scroll", handleScroll, { passive: true });
+  return () => window.removeEventListener("scroll", handleScroll);
+  // rerun scroll logic on route change
+}, [location.pathname]);
+
+
+  // useEffect(() => {
+  //   const heroHeight = document.querySelector(".hero")?.offsetHeight || 400;
+
+  //   const handleScroll = () => {
+  //     const currentScroll = window.scrollY;
+  //     console.log(currentScroll);
+  //     setScrollUp(currentScroll < prevScroll.current);
+  //     setAtTop(currentScroll <= 10);
+  //     setOverHero(currentScroll < heroHeight / 2);
+  //     prevScroll.current = currentScroll;
+  //   };
+
+  //   window.addEventListener("scroll", handleScroll, { passive: true });
+  //   return () => window.removeEventListener("scroll", handleScroll);
+  // }, []);
+  const baseClasses = `
+  fixed z-50 w-full transition-all duration-300
+  ${
+    atTop && overHero
+      ? "bg-transparent text-white"
+      : "bg-base-100/60 backdrop-blur-lg shadow"
+  }
+  ${!scrollUp && !atTop ? "-top-20" : "top-0"}
+`;
+  // const baseClasses = `
+  //   fixed z-50 w-full transition-all duration-300
+  //   ${!atTop && "bg-base-100/60 backdrop-blur-lg shadow"}
+  //   ${
+  //     atTop && overHero
+  //       ? "bg-transparent text-white"
+  //       : "bg-base-100/60 backdrop-blur-lg shadow"
+  //   }
+  //   ${!scrollUp && !atTop ? "-top-20" : "top-0"}
+  // `;
 
   const links = (
     <>

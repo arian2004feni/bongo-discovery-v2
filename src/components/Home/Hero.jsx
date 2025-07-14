@@ -59,7 +59,7 @@ export default function Hero() {
   };
 
   return (
-    <div className="relative w-full h-screen min-h-[750px] overflow-hidden">
+    <div className="hero relative w-full h-screen min-h-[750px] overflow-hidden">
       <AnimatePresence>
         <motion.div
           key={index}
