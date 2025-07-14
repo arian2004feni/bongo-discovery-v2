@@ -6,9 +6,19 @@ import useAuth from "../../hooks/useAuth";
 import { updateProfile } from "firebase/auth";
 import LoadingPage from "../LoadingAnimation/LoadingPage";
 import Swal from "sweetalert2";
+import { useEffect } from "react";
+import { useNavigate } from "react-router";
 
 const Register = () => {
-  const { createUser, setUser, setLoading } = useAuth();
+  const {
+    user,
+    redirectAfterLogin,
+    setRedirectAfterLogin,
+    createUser,
+    setUser,
+    setLoading,
+  } = useAuth();
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -16,67 +26,73 @@ const Register = () => {
     formState: { errors },
   } = useForm();
 
-  const onSubmit = ({ name, email, photoUrl, password }) => {
-  setLoading(true);
+  useEffect(() => {
+    if (user && redirectAfterLogin) {
+      navigate(redirectAfterLogin);
+      setRedirectAfterLogin(null); // 🧹 clear it
+    }
+  }, [user, redirectAfterLogin, navigate, setRedirectAfterLogin]);
 
-  createUser(email, password)
-    .then((res) => {
-      
-      const profile = {
-        displayName: name,
-        photoURL: photoUrl,
-      };
-      
-      updateProfile(res.user, profile)
-      .then(() => {
+  const onSubmit = ({ name, email, photoUrl, password }) => {
+    setLoading(true);
+
+    createUser(email, password)
+      .then((res) => {
+        const profile = {
+          displayName: name,
+          photoURL: photoUrl,
+        };
+
+        updateProfile(res.user, profile)
+          .then(() => {
+            setLoading(false);
+            document.getElementById("register_modal").close();
+            setUser({
+              uid: res.user.uid,
+              email: res.user.email,
+              displayName: name,
+              photoURL: photoUrl,
+            });
+
+            reset();
+
+            Swal.fire({
+              icon: "success",
+              title: "Registration Successful 🎉",
+              text: "Welcome aboard!",
+              confirmButtonText: "Continue",
+            });
+          })
+          .catch((err) => {
+            setLoading(false);
+            console.error(err);
+            Swal.fire({
+              icon: "error",
+              title: "Profile Update Failed",
+              text: err.message || "Unable to set profile details.",
+              confirmButtonText: "OK",
+            }).then(() => {
+              document.getElementById("register_modal").showModal();
+              reset();
+            });
+          });
+      })
+      .catch((err) => {
         setLoading(false);
         document.getElementById("register_modal").close();
-          setUser({
-            uid: res.user.uid,
-            email: res.user.email,
-            displayName: name,
-            photoURL: photoUrl,
-          });
+        console.error(err);
 
+        Swal.fire({
+          icon: "error",
+          title: "Registration Failed",
+          text: err.message || "Could not create account. Please try again.",
+          confirmButtonText: "OK",
+        }).then(() => {
+          document.getElementById("register_modal").showModal();
           reset();
-
-          Swal.fire({
-            icon: 'success',
-            title: 'Registration Successful 🎉',
-            text: 'Welcome aboard!',
-            confirmButtonText: 'Continue'
-          });
-        })
-        .catch((err) => {
-          setLoading(false);
-          console.error(err);
-          Swal.fire({
-            icon: 'error',
-            title: 'Profile Update Failed',
-            text: err.message || 'Unable to set profile details.',
-            confirmButtonText: 'OK'
-          }).then(() => {
-            document.getElementById("register_modal").showModal();
-            reset();
-          });
         });
-    })
-    .catch((err) => {
-      setLoading(false);
-      document.getElementById("register_modal").close();
-      console.error(err);
-
-      Swal.fire({
-        icon: 'error',
-        title: 'Registration Failed',
-        text: err.message || 'Could not create account. Please try again.',
-        confirmButtonText: 'OK'
-      }).then(() => {
-        document.getElementById("register_modal").showModal();
-        reset();
       });
-    });
-};
+  };
 
   const openLoginModal = () => {
     document.getElementById("register_modal").close();

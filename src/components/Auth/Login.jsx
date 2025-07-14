@@ -5,15 +5,25 @@ import FormError from "../FormError";
 import useAuth from "../../hooks/useAuth";
 import LoadingPage from "../LoadingAnimation/LoadingPage";
 import Swal from "sweetalert2";
+import { useEffect } from "react";
+import { useNavigate } from "react-router";
 
 const Login = () => {
-  const { signInUser, setLoading } = useAuth();
+  const { user, redirectAfterLogin, setRedirectAfterLogin, signInUser, setLoading } = useAuth();
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
   } = useForm();
+
+    useEffect(() => {
+    if (user && redirectAfterLogin) {
+      navigate(redirectAfterLogin);
+      setRedirectAfterLogin(null); // 🧹 clear it
+    }
+  }, [user, redirectAfterLogin, navigate, setRedirectAfterLogin]);
 
 const onSubmit = ({ email, password }) => {
   setLoading(true);

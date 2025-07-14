@@ -16,6 +16,7 @@ const AuthProvider = ({ children }) => {
 
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [redirectAfterLogin, setRedirectAfterLogin] = useState(null); // NEW
 
   const createUser = (email, password) => {
     setLoading(true);
@@ -63,6 +64,8 @@ const AuthProvider = ({ children }) => {
     signOutUser,
     passReset,
     createUserWithGoogle,
+    setRedirectAfterLogin,
+    redirectAfterLogin
   };
 
   return <AuthContext value={userInfo}>{children}</AuthContext>;

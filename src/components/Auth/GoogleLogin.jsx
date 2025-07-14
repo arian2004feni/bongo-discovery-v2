@@ -1,9 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import useAuth from "../../hooks/useAuth";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router";
 
 const GoogleLogin = ({ color, id }) => {
-  const { createUserWithGoogle, setLoading } = useAuth();
+  const { user, redirectAfterLogin, setRedirectAfterLogin, createUserWithGoogle, setLoading } = useAuth();
+  const navigate = useNavigate();
+
+      useEffect(() => {
+      if (user && redirectAfterLogin) {
+        navigate(redirectAfterLogin);
+        setRedirectAfterLogin(null); // 🧹 clear it
+      }
+    }, [user, redirectAfterLogin, navigate, setRedirectAfterLogin]);
+  
 
   const handleGoogleLogin = () => {
     setLoading(true);
