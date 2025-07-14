@@ -4,27 +4,49 @@ import GoogleLogin from "./GoogleLogin";
 import FormError from "../FormError";
 import useAuth from "../../hooks/useAuth";
 import LoadingPage from "../LoadingAnimation/LoadingPage";
+import Swal from "sweetalert2";
 
 const Login = () => {
   const { signInUser, setLoading } = useAuth();
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm();
 
-  const onSubmit = ({ email, password }) => {
-    setLoading(true)
-    signInUser(email, password)
+const onSubmit = ({ email, password }) => {
+  setLoading(true);
+
+  signInUser(email, password)
     .then(() => {
-      setLoading(false)
+      setLoading(false);
       document.getElementById("login_modal").close();
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Login Successful ✅',
+        text: 'Welcome back!',
+        confirmButtonText: 'Continue'
+      });
     })
     .catch((err) => {
       setLoading(false);
-      console.log(err);
-    })
-  };
+      document.getElementById("login_modal").close();
+      console.error(err);
+
+      Swal.fire({
+        icon: 'error',
+        title: 'Login Failed',
+        text: err.message || 'Unable to log in. Please check your credentials and try again.',
+        confirmButtonText: 'OK'
+      }).then(() => {
+        // Reopen the modal when user clicks OK
+        document.getElementById("login_modal").showModal();
+        reset()
+      });
+    });
+};
 
   const openRegisterModal = () => {
     document.getElementById("login_modal").close();
