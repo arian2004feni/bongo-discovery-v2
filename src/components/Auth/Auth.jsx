@@ -1,20 +1,50 @@
 import { Link } from "react-router";
 import useAuth from "../../hooks/useAuth";
+import Swal from "sweetalert2";
 
 const Auth = ({ atTop }) => {
   const { setLoading, user, signOutUser } = useAuth();
-
   const handleLogOut = () => {
-    setLoading(true);
-    signOutUser()
-      .then(() => {
-        // Sign-out successful.
-        setLoading(false)
-      })
-      .catch((error) => {
-        setLoading(false);
-        console.error("Error signing out:", error);
-      });
+    Swal.fire({
+      title: "Do you really want to log out?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, log out!",
+      cancelButtonText: "Cancel",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        setLoading(true);
+        signOutUser()
+          .then(() => {
+            setLoading(false);
+            Swal.fire({
+              icon: "success",
+              title: "Logged out successfully!",
+              showConfirmButton: false,
+              timer: 1000,
+            });
+          })
+          .catch((error) => {
+            setLoading(false);
+            console.error("Error signing out:", error);
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: "Something went wrong!",
+            });
+          });
+      } else if (result.dismiss === Swal.DismissReason.cancel) {
+        Swal.fire({
+          icon: "info",
+          title: "Cancelled",
+          text: "You are still logged in.",
+          timer: 1000,
+          showConfirmButton: false,
+        });
+      }
+    });
   };
 
   if (user) {
