@@ -3,6 +3,7 @@ import test8 from "../../assets/test8.jpg";
 import FormError from "../FormError";
 import useAuth from "../../hooks/useAuth";
 import LoadingPage from "../LoadingAnimation/LoadingPage";
+import Swal from "sweetalert2";
 
 const ForgotPass = () => {
   const { passReset, setLoading } = useAuth();
@@ -18,10 +19,33 @@ const ForgotPass = () => {
     passReset(email)
       .then(() => {
         setLoading(false);
-        openLoginModal();
+        document.getElementById("forgotPass_modal").close();
+        Swal.fire({
+          icon: "success",
+          title: "Email Sent!",
+          text: "Please check your inbox for the password reset link.",
+          showCancelButton: true,
+          confirmButtonText: "Open Mail",
+          cancelButtonText: "Later",
+          customClass: {
+            popup: "z-[9999]", // Tailwind style for high z-index
+          },
+        }).then((result) => {
+          if (result.isConfirmed) {
+            // Redirect to mail—customize this URL based on user needs
+            window.open("https://mail.google.com", "_blank");
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            openLoginModal();
+          }
+        });
       })
       .catch((err) => {
         setLoading(false);
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "Something went wrong. Please try again.",
+        });
         console.log(err);
       });
   };
@@ -40,7 +64,7 @@ const ForgotPass = () => {
         </form>
 
         <div className="w-full h-full">
-              <LoadingPage />
+          <LoadingPage />
           <div className="flex w-full h-full flex-col relative lg:flex-row-reverse">
             {/* Left Side: Image */}
             <div className="w-full h-full ">

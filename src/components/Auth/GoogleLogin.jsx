@@ -1,19 +1,39 @@
 import React from "react";
 import useAuth from "../../hooks/useAuth";
+import Swal from "sweetalert2";
 
 const GoogleLogin = ({ color, id }) => {
   const { createUserWithGoogle, setLoading } = useAuth();
 
   const handleGoogleLogin = () => {
-    setLoading(true)
+    setLoading(true);
+    
     createUserWithGoogle()
-      .then(() => {
-        setLoading(false)
+    .then(() => {
         document.getElementById(id).close();
+        setLoading(false);
+        Swal.fire({
+          icon: "success",
+          title: "Login Successful 🎉",
+          text: "You’ve signed in with Google successfully!",
+          confirmButtonText: "Continue",
+        });
       })
       .catch((error) => {
-        setLoading(false)
+        document.getElementById(id).close();
+        setLoading(false);
+
         console.error("Error during Google login:", error);
+
+        Swal.fire({
+          icon: "error",
+          title: "Login Failed",
+          text: error.message || "Something went wrong during Google login.",
+          confirmButtonText: "OK",
+        }).then(() => {
+          // Call the open() function after user clicks OK
+          document.getElementById(id).showModal();
+        });
       });
   };
 
