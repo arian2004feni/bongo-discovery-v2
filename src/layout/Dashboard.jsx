@@ -1,8 +1,8 @@
+import { RiUserSettingsLine } from "react-icons/ri";
 import { Link, Outlet, useLoaderData, useParams } from "react-router";
 import DashboardSideNav from "../components/Common/DashboardSideNav";
-import ThemeToggle from "../components/theme/ThemeToggle";
 import Logo from "../components/Logo";
-import { RiUserSettingsLine } from "react-icons/ri";
+import ThemeToggle from "../components/theme/ThemeToggle";
 
 const Dashboard = () => {
 const emailId = useParams();
@@ -69,7 +69,7 @@ const emailId = useParams();
             Logged in as{" "}
             <span className="font-bold">{`${
               (data?.role === "tourist" && "Tourist") ||
-              (data?.role === "tour_guide" && "Tour Guide") ||
+              (data?.role === "guide" && "Tour Guide") ||
               (data?.role === "admin" && "Admin") ||
               "N/A"
             }`}</span>

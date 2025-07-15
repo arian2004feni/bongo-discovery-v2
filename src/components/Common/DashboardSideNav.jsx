@@ -6,15 +6,13 @@ import {
   MdOutlineNoteAdd,
   MdTravelExplore,
 } from "react-icons/md";
-import { PiUserCircleGear } from "react-icons/pi";
 import {
   RiCalendarEventFill,
   RiGroupLine,
   RiRoadMapLine,
-  RiUserSettingsLine,
 } from "react-icons/ri";
 import { VscCommentDiscussion } from "react-icons/vsc";
-import { Link } from "react-router";
+import { NavLink } from "react-router";
 
 const DashboardSideNav = ({ emailId }) => {
   const [userRole, setUserRole] = useState(null);
@@ -32,28 +30,28 @@ const DashboardSideNav = ({ emailId }) => {
         {/* Sidebar content here */}
 
         <li>
-          <Link to="/my-bookings">
+          <NavLink to="/my-bookings">
             <RiCalendarEventFill className="mr-2" />
             My Bookings
-          </Link>
+          </NavLink>
         </li>
         <li>
-          <Link to="/manage-stories">
+          <NavLink to="/manage-stories">
             <VscCommentDiscussion className="mr-2" />
             Manage Stories
-          </Link>
+          </NavLink>
         </li>
         <li>
-          <Link to="/add-stories">
+          <NavLink to="/add-stories">
             <MdAddCircleOutline className="mr-2" />
             Add Stories
-          </Link>
+          </NavLink>
         </li>
         <li>
-          <Link to="/join-as-tour-guide">
+          <NavLink to="/join-as-tour-guide">
             <MdTravelExplore className="mr-2" />
             Join as Tour Guide
-          </Link>
+          </NavLink>
         </li>
       </>
     );
@@ -63,22 +61,22 @@ const DashboardSideNav = ({ emailId }) => {
     return (
       <>
         <li>
-          <Link to="/my-bookings">
+          <NavLink to="/my-bookings">
             <RiRoadMapLine className="mr-2" />
             My Assigned Tours
-          </Link>
+          </NavLink>
         </li>
         <li>
-          <Link to="/add-stories">
+          <NavLink to="/add-stories">
             <MdAddCircleOutline className="mr-2" />
             Add Stories
-          </Link>
+          </NavLink>
         </li>
         <li>
-          <Link to="/manage-stories">
+          <NavLink to="/manage-stories">
             <VscCommentDiscussion className="mr-2" />
             Manage Stories
-          </Link>
+          </NavLink>
         </li>
       </>
     );
@@ -87,22 +85,22 @@ const DashboardSideNav = ({ emailId }) => {
     return (
       <>
         <li>
-          <Link to="/my-bookings">
+          <NavLink to="/my-bookings">
             <MdOutlineNoteAdd className="mr-2" />
             Add Package
-          </Link>
+          </NavLink>
         </li>
         <li>
-          <Link to="/add-stories">
+          <NavLink to="/add-stories">
             <RiGroupLine className="mr-2" />
             Manage Users
-          </Link>
+          </NavLink>
         </li>
         <li>
-          <Link to="/add-stories">
+          <NavLink to="/add-stories">
             <BiUserCircle className="mr-2" />
             Manage Candidates
-          </Link>
+          </NavLink>
         </li>
       </>
     );

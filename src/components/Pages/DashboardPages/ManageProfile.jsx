@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
-import useAuth from "../../../hooks/useAuth";
 import axios from "axios";
+import { useEffect, useState } from "react";
 import { FaUserEdit } from "react-icons/fa";
-import EditProfileModal from "./EditProfileModal";
 import { useOutletContext } from "react-router";
+import useAuth from "../../../hooks/useAuth";
+import EditProfileModal from "./EditProfileModal";
 
 export default function ManageProfile() {
   const { user } = useAuth(); // Firebase user
@@ -14,14 +14,28 @@ export default function ManageProfile() {
 
   console.log(userData);
 
+  // useEffect(() => {
+  //   if (userData?.role === "admin") {
+  //     axios
+  //       .get("http://localhost:3000/admin/stats")
+  //       .then((res) => setAdminStats(res.data))
+  //       .catch((err) => console.error(err));
+  //   }
+  // }, [userData]);
+
   useEffect(() => {
-    if (userData?.role === "admin") {
-      axios
-        .get("http://localhost:3000/admin/stats") // Make sure this endpoint exists
-        .then((res) => setAdminStats(res.data))
-        .catch((err) => console.error(err));
-    }
-  }, [userData]);
+  if (userData?.role === "admin") {
+    setTimeout(() => {
+      setAdminStats({
+        totalPayment: 152500,
+        totalGuides: 12,
+        totalPackages: 36,
+        totalClients: 85,
+        totalStories: 29,
+      });
+    }, 500);
+  }
+}, [userData]);
 
   if (!userData) return <div className="text-center py-8">Loading...</div>;
 
@@ -81,7 +95,7 @@ export default function ManageProfile() {
           <span className="font-semibold">Role:</span>{" "}
           <span className="badge badge-accent">{`${
             (role === "tourist" && "Tourist") ||
-            (role === "tour_guide" && "Tour Guide") ||
+            (role === "guide" && "Tour Guide") ||
             (role === "admin" && "Admin") ||
             "N/A"
           }`}</span>

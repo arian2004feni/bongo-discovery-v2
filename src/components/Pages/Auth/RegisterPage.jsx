@@ -5,6 +5,7 @@ import registerBg from "./../../../assets/test1.jpg";
 import useAuth from "../../../hooks/useAuth";
 import Swal from "sweetalert2";
 import GoogleLogin from "./GoogleLogin";
+import axios from "axios";
 
 const RegisterPage = () => {
   const { createUser, setLoading } = useAuth();
@@ -29,6 +30,37 @@ const RegisterPage = () => {
         };
         updateProfile(res.user, userInfo)
           .then(() => {
+            setLoading(false);
+            const user = res.user;
+            // Optional: Try splitting displayName into first and last name
+            const [firstName = "", lastName = ""] =
+              user.displayName?.split(" ") || [];
+
+            const userData = {
+              firstName,
+              lastName,
+              dateOfBirth: "", // You may want to collect this later
+              phoneNumber: user.phoneNumber || "", // Usually null from Google
+              address: {
+                country: "", // You may collect later
+                city: "",
+                postCode: "",
+              },
+              email: user.email,
+              photo: user.photoURL,
+              createdAt: new Date().toISOString(),
+              lastLogin: new Date().toISOString(),
+              role: "tourist",
+            };
+
+            axios
+              .post("http://localhost:3000/users", userData)
+              .then((res) => {
+                console.log("User added:", res.data);
+              })
+              .catch((err) => {
+                console.error("Error adding user:", err);
+              });
             Swal.fire({
               icon: "success",
               title: "Registration Successful 🎉",
@@ -36,7 +68,6 @@ const RegisterPage = () => {
               confirmButtonText: "Continue",
             });
             navigate(location?.state || "/");
-            setLoading(false);
           })
           .catch((err) => {
             setLoading(false);
