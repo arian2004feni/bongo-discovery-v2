@@ -1,10 +1,13 @@
-import React from "react";
-import { Outlet } from "react-router";
+import { Link, Outlet, useLoaderData, useParams } from "react-router";
 import DashboardSideNav from "../components/Common/DashboardSideNav";
 import ThemeToggle from "../components/theme/ThemeToggle";
 import Logo from "../components/Logo";
+import { RiUserSettingsLine } from "react-icons/ri";
 
 const Dashboard = () => {
+const emailId = useParams();
+  const data = useLoaderData();
+
   return (
     <div className="drawer lg:drawer-open">
       <input id="my-drawer" type="checkbox" className="drawer-toggle" />
@@ -38,7 +41,7 @@ const Dashboard = () => {
           </div>
         </div>
         {/* Page content here */}
-        <Outlet></Outlet>
+        <Outlet context={data}></Outlet>
       </div>
       <div className="drawer-side">
         <label
@@ -53,11 +56,23 @@ const Dashboard = () => {
             <ThemeToggle />
           </div>
           {/* Sidebar Navigation */}
-          <DashboardSideNav />
+          <li>
+          <Link to={`/dashboard/${emailId?.email}/profile`}>
+            <RiUserSettingsLine className="mr-2" />
+            Manage Profile
+          </Link>
+        </li>
+          <DashboardSideNav emailId={emailId}/>
           {/* Footer */}
           <footer className="mt-auto mb-2 text-center">
             <div className="divider"></div>
-            Logged in as <span className="font-bold">Tourist</span>
+            Logged in as{" "}
+            <span className="font-bold">{`${
+              (data?.role === "tourist" && "Tourist") ||
+              (data?.role === "tour_guide" && "Tour Guide") ||
+              (data?.role === "admin" && "Admin") ||
+              "N/A"
+            }`}</span>
           </footer>
         </ul>
       </div>

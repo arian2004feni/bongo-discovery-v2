@@ -6,6 +6,8 @@ import LoginPage from "../components/Pages/Auth/LoginPage";
 import RegisterPage from "../components/Pages/Auth/RegisterPage";
 import ForgotPass from "../components/Pages/Auth/ForgotPass";
 import Dashboard from "../layout/Dashboard";
+import PrivateRoute from "../routes/PrivateRoute"
+import ManageProfile from "../components/Pages/DashboardPages/ManageProfile";
 
 export const router = createBrowserRouter([
     {
@@ -35,7 +37,14 @@ export const router = createBrowserRouter([
         ]
     },
     {
-        path: 'dashboard',
-        Component: Dashboard
+        path: 'dashboard/:email',
+        element: <PrivateRoute><Dashboard /></PrivateRoute>,
+        loader: ({params}) => fetch(`http://localhost:3000/users/${params.email}`),
+        children: [
+            {
+                path: 'profile',
+                element: <PrivateRoute><ManageProfile /></PrivateRoute>
+            }
+        ]
     }
 ])

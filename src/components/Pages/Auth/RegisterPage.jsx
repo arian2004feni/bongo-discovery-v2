@@ -1,7 +1,6 @@
 import { updateProfile } from "firebase/auth";
-import { Link, Navigate, useNavigate } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import { getFirebaseAuthErrorMessage } from "../../../../getFirebaseAuthErrorMessage";
-import { Helmet } from "react-helmet";
 import registerBg from "./../../../assets/test1.jpg";
 import useAuth from "../../../hooks/useAuth";
 import Swal from "sweetalert2";
@@ -10,6 +9,7 @@ import GoogleLogin from "./GoogleLogin";
 const RegisterPage = () => {
   const { createUser, setLoading } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleRegister = (e) => {
     e.preventDefault();
@@ -35,7 +35,7 @@ const RegisterPage = () => {
               text: "Welcome aboard!",
               confirmButtonText: "Continue",
             });
-            navigate("/");
+            navigate(location?.state || "/");
             setLoading(false);
           })
           .catch((err) => {
@@ -62,9 +62,6 @@ const RegisterPage = () => {
   };
   return (
     <div className="relative w-full min-h-screen py-20 flex justify-center items-center bg-black/20 dark:bg-black/75">
-      <Helmet>
-        <title>Bongo Discovery | Register</title>
-      </Helmet>
       <img
         src={registerBg}
         alt="bg"

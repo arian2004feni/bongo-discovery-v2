@@ -77,7 +77,7 @@ const Auth = ({ atTop }) => {
               {user?.displayName} - {user?.email}{" "}
             </li>
             <li>
-              <Link to='dashboard'>Dashboard</Link>
+              <Link to={`/dashboard/${user?.email}/profile`}>Dashboard</Link>
             </li>
             <li>
               <Link>Offer Announcements</Link>
