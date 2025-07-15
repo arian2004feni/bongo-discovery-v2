@@ -5,6 +5,7 @@ import AboutPage from "../pages/AboutPage";
 import LoginPage from "../components/Pages/Auth/LoginPage";
 import RegisterPage from "../components/Pages/Auth/RegisterPage";
 import ForgotPass from "../components/Pages/Auth/ForgotPass";
+import Dashboard from "../layout/Dashboard";
 
 export const router = createBrowserRouter([
     {
@@ -32,5 +33,9 @@ export const router = createBrowserRouter([
                 Component: ForgotPass
             }
         ]
+    },
+    {
+        path: 'dashboard',
+        Component: Dashboard
     }
 ])
