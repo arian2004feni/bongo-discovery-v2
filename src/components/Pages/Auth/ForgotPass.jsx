@@ -1,22 +1,18 @@
-import { useForm } from "react-hook-form";
-import test8 from "../../assets/test8.jpg";
-import FormError from "../FormError";
-import useAuth from "../../hooks/useAuth";
-import LoadingPage from "../LoadingAnimation/LoadingPage";
+import { getFirebaseAuthErrorMessage } from "../../../../getFirebaseAuthErrorMessage";
+import test8 from "../../../assets/test8.jpg";
+import useAuth from "../../../hooks/useAuth";
+import LoadingPage from "../../LoadingAnimation/LoadingPage";
 import Swal from "sweetalert2";
 
 const ForgotPass = () => {
-  const { passReset, setLoading } = useAuth();
+  const { forgetPassword, setLoading, setEmailText, emailText } = useAuth();
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+  const handleForgotPassword = (e) => {
+    e.preventDefault();
 
-  const onSubmit = ({ email }) => {
-    setLoading(true);
-    passReset(email)
+    const email = e.target.email.value;
+
+    forgetPassword(email)
       .then(() => {
         setLoading(false);
         document.getElementById("forgotPass_modal").close();
@@ -40,19 +36,18 @@ const ForgotPass = () => {
         });
       })
       .catch((err) => {
+        const message = getFirebaseAuthErrorMessage(err.code);
         setLoading(false);
         Swal.fire({
           icon: "error",
           title: "Oops...",
-          text: "Something went wrong. Please try again.",
+          text: message,
         });
-        console.log(err);
       });
   };
 
   const openLoginModal = () => {
     document.getElementById("forgotPass_modal").close();
-    document.getElementById("login_modal").showModal();
   };
   return (
     <dialog id="forgotPass_modal" className="modal pl-8 pr-4 py-8">
@@ -93,7 +88,7 @@ const ForgotPass = () => {
                   Password Recovery!
                 </h2>
 
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                <form onSubmit={handleForgotPassword} className="space-y-4">
                   {/* Email Input */}
                   <div className="form-control">
                     <label className="label">
@@ -103,17 +98,11 @@ const ForgotPass = () => {
                     </label>
                     <input
                       type="email"
-                      placeholder="you@example.com"
+                      value={emailText}
+                      onChange={(e) => setEmailText(e.target.value)}
+                      placeholder="Enter Your Email Address"
                       className="input input-bordered w-full"
-                      {...register("email", {
-                        required: "Email is required",
-                        pattern: {
-                          value: /^\S+@\S+\.\S+$/,
-                          message: "Please enter a valid email address",
-                        },
-                      })}
                     />
-                    <FormError error={errors.email} />
                   </div>
 
                   {/* Login Button */}

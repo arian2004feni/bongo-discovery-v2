@@ -1,26 +1,17 @@
-import React, { useEffect } from "react";
-import useAuth from "../../hooks/useAuth";
-import Swal from "sweetalert2";
 import { useNavigate } from "react-router";
+import Swal from "sweetalert2";
+import { getFirebaseAuthErrorMessage } from "../../../../getFirebaseAuthErrorMessage";
+import useAuth from "../../../hooks/useAuth";
 
-const GoogleLogin = ({ color, id }) => {
-  const { user, redirectAfterLogin, setRedirectAfterLogin, createUserWithGoogle, setLoading } = useAuth();
+const GoogleLogin = () => {
+  const { googleSignInUser, setLoading } = useAuth();
   const navigate = useNavigate();
-
-      useEffect(() => {
-      if (user && redirectAfterLogin) {
-        navigate(redirectAfterLogin);
-        setRedirectAfterLogin(null); // 🧹 clear it
-      }
-    }, [user, redirectAfterLogin, navigate, setRedirectAfterLogin]);
-  
 
   const handleGoogleLogin = () => {
     setLoading(true);
-    
-    createUserWithGoogle()
-    .then(() => {
-        document.getElementById(id).close();
+
+    googleSignInUser()
+      .then(() => {
         setLoading(false);
         Swal.fire({
           icon: "success",
@@ -28,29 +19,24 @@ const GoogleLogin = ({ color, id }) => {
           text: "You’ve signed in with Google successfully!",
           confirmButtonText: "Continue",
         });
+        navigate(location?.state || "/");
       })
-      .catch((error) => {
-        document.getElementById(id).close();
-        setLoading(false);
-
-        console.error("Error during Google login:", error);
-
+      .catch((err) => {
+        const message = getFirebaseAuthErrorMessage(err.code);
         Swal.fire({
           icon: "error",
           title: "Login Failed",
-          text: error.message || "Something went wrong during Google login.",
+          text: message,
           confirmButtonText: "OK",
-        }).then(() => {
-          // Call the open() function after user clicks OK
-          document.getElementById(id).showModal();
         });
+        setLoading(false);
       });
   };
 
   return (
     <button
       onClick={handleGoogleLogin}
-      className={`btn w-full bg-base-100 dark:border-${color} text-base-content shadow`}
+      className={`btn w-full bg-base-100 dark:border dark:border-white/20 text-base-content shadow`}
     >
       <svg
         aria-label="Google logo"

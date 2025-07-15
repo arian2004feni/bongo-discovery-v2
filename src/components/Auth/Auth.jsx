@@ -100,8 +100,8 @@ const Auth = ({ atTop }) => {
 
   return (
     <div>
-      <button
-        onClick={() => document.getElementById("login_modal").showModal()}
+      <Link
+        to="/login"
         className={`btn btn-ghost hover:bg-transparent outline-1 rounded-none -outline-offset-1 ${
           atTop
             ? "outline-white hover:text-white"
@@ -109,13 +109,12 @@ const Auth = ({ atTop }) => {
         }  *:hover:bg-transparent rounded mx-2`}
       >
         Login
-      </button>
-      <button
-        onClick={() => document.getElementById("register_modal").showModal()}
+      </Link>
+      <Link to="/register"
         className="btn rounded-none border-prime shadow-none bg-prime dark:bg-dark-prime text-prime-content"
       >
         Register
-      </button>
+      </Link>
     </div>
   );
 };
