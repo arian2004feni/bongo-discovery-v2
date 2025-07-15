@@ -30,25 +30,25 @@ const DashboardSideNav = ({ emailId }) => {
         {/* Sidebar content here */}
 
         <li>
-          <NavLink to="/my-bookings">
+          <NavLink to="my-bookings">
             <RiCalendarEventFill className="mr-2" />
             My Bookings
           </NavLink>
         </li>
         <li>
-          <NavLink to="/manage-stories">
+          <NavLink to="manage-stories">
             <VscCommentDiscussion className="mr-2" />
             Manage Stories
           </NavLink>
         </li>
         <li>
-          <NavLink to="/add-stories">
+          <NavLink to="add-stories">
             <MdAddCircleOutline className="mr-2" />
             Add Stories
           </NavLink>
         </li>
         <li>
-          <NavLink to="/join-as-tour-guide">
+          <NavLink to="join-as-guide">
             <MdTravelExplore className="mr-2" />
             Join as Tour Guide
           </NavLink>
@@ -85,7 +85,7 @@ const DashboardSideNav = ({ emailId }) => {
     return (
       <>
         <li>
-          <NavLink to="/my-bookings">
+          <NavLink to="add-package">
             <MdOutlineNoteAdd className="mr-2" />
             Add Package
           </NavLink>

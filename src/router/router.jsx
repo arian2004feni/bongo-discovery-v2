@@ -8,6 +8,11 @@ import ForgotPass from "../components/Pages/Auth/ForgotPass";
 import Dashboard from "../layout/Dashboard";
 import PrivateRoute from "../routes/PrivateRoute"
 import ManageProfile from "../components/Pages/DashboardPages/ManageProfile";
+import AddPackage from "../components/Pages/DashboardPages/Admin/AddPackage";
+import AddStory from "../components/Pages/DashboardPages/AddStory";
+import ManageStories from "../components/Pages/DashboardPages/ManageStories";
+import UpdateStory from "../components/Pages/DashboardPages/UpdateStory";
+import JoinAsGuide from "../components/Pages/DashboardPages/Tourist/JoinAsGuide";
 
 export const router = createBrowserRouter([
     {
@@ -44,6 +49,26 @@ export const router = createBrowserRouter([
             {
                 path: 'profile',
                 element: <PrivateRoute><ManageProfile /></PrivateRoute>
+            },
+            {
+                path: 'add-package',
+                element: <PrivateRoute><AddPackage /></PrivateRoute>
+            },
+            {
+                path: 'add-stories',
+                element: <PrivateRoute><AddStory /></PrivateRoute>
+            },
+            {
+                path: 'manage-stories',
+                element: <PrivateRoute><ManageStories /></PrivateRoute>
+            },
+            {
+                path: 'update-story/:id',
+                element: <PrivateRoute><UpdateStory /></PrivateRoute>
+            },
+            {
+                path: 'join-as-guide',
+                element: <PrivateRoute><JoinAsGuide /></PrivateRoute>
             }
         ]
     }
