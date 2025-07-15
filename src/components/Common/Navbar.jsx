@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router";
-import logo from "../../assets/logo.png";
 import Auth from "../Auth/Auth";
 import ThemeToggle from "../theme/ThemeToggle";
+import Logo from "../Logo";
 
 const Navbar = () => {
   const [atTop, setAtTop] = useState(true);
@@ -97,20 +97,7 @@ useEffect(() => {
     <div className={baseClasses}>
       <div className="navbar justify-between">
         <div className="navbar-start">
-          <Link className="rounded-lg  flex items-center" to="/">
-            <div className="jost flex leading-4 items-center">
-              <img
-                src={logo}
-                alt="Logo"
-                className={`h-10 dark:bg-white mask mask-squircle ${
-                  atTop ? "bg-white" : ""
-                }`}
-              />
-              <span className="ml-2 text-2xl font-heading">
-                <span>Bongo</span> <span>Discovery</span>
-              </span>
-            </div>
-          </Link>
+          <Logo atTop={atTop} />
         </div>
         <div className="navbar-center flex items-center gap-2">
           <ul className="menu text-base menu-horizontal px-1 hidden md:flex">

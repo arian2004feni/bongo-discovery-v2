@@ -1,18 +1,21 @@
 import React from "react";
 import { Outlet } from "react-router";
+import DashboardSideNav from "../components/Common/DashboardSideNav";
+import ThemeToggle from "../components/theme/ThemeToggle";
+import Logo from "../components/Logo";
 
 const Dashboard = () => {
   return (
     <div className="drawer lg:drawer-open">
-      <input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
+      <input id="my-drawer" type="checkbox" className="drawer-toggle" />
       <div className="drawer-content flex flex-col">
         {/* Navbar */}
-        <div className="navbar bg-base-300 w-full lg:hidden">
-          <div className="flex-none">
+        <div className="navbar justify-between bg-base-300 w-full lg:hidden">
+          <div className="flex items-center justify-center">
             <label
-              htmlFor="my-drawer-3"
+              htmlFor="my-drawer"
               aria-label="open sidebar"
-              className="btn btn-square btn-ghost"
+              className="btn btn-square btn-ghost mr-5"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -28,18 +31,10 @@ const Dashboard = () => {
                 ></path>
               </svg>
             </label>
+            <Logo />
           </div>
-          <div className="mx-2 flex-1 px-2">Navbar Title</div>
-          <div className="hidden flex-none lg:block">
-            <ul className="menu menu-horizontal">
-              {/* Navbar menu content here */}
-              <li>
-                <a>Navbar Item 1</a>
-              </li>
-              <li>
-                <a>Navbar Item 2</a>
-              </li>
-            </ul>
+          <div className="">
+            <ThemeToggle />
           </div>
         </div>
         {/* Page content here */}
@@ -47,18 +42,23 @@ const Dashboard = () => {
       </div>
       <div className="drawer-side">
         <label
-          htmlFor="my-drawer-3"
+          htmlFor="my-drawer"
           aria-label="close sidebar"
           className="drawer-overlay"
         ></label>
-        <ul className="menu bg-base-200 min-h-full w-80 p-4">
-          {/* Sidebar content here */}
-          <li>
-            <a>Sidebar Item 1</a>
-          </li>
-          <li>
-            <a>Sidebar Item 2</a>
-          </li>
+        <ul className="menu menu-lg gap-3 bg-base-200 min-h-full w-80 p-4">
+          {/* Sidebar Logo */}
+          <div className="mb-5 flex justify-between items-center">
+            <Logo />
+            <ThemeToggle />
+          </div>
+          {/* Sidebar Navigation */}
+          <DashboardSideNav />
+          {/* Footer */}
+          <footer className="mt-auto mb-2 text-center">
+            <div className="divider"></div>
+            Logged in as <span className="font-bold">Tourist</span>
+          </footer>
         </ul>
       </div>
     </div>
