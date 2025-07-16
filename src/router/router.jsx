@@ -17,6 +17,7 @@ import ManageCandidates from "../components/Pages/DashboardPages/Admin/ManageCan
 import TourGuideProfile from "../pages/TourGuideProfile";
 import PackageDetails from "../pages/PackageDetails";
 import MyBookings from "../components/Pages/DashboardPages/Tourist/MyBookings";
+import CommunityPage from "../pages/CommunityPage";
 
 export const router = createBrowserRouter([
     {
@@ -30,6 +31,10 @@ export const router = createBrowserRouter([
             {
                 path: 'about',
                 Component: AboutPage
+            },
+            {
+                path: 'community',
+                Component: CommunityPage
             },
             {
                 path: '/login',
