@@ -20,6 +20,7 @@ import MyBookings from "../components/Pages/DashboardPages/Tourist/MyBookings";
 import CommunityPage from "../pages/CommunityPage";
 import AllTripsPage from "../pages/AllTripsPage";
 import ManageUsers from "../components/Pages/DashboardPages/Admin/ManageUsers";
+import AssignedToursPage from "../components/Pages/DashboardPages/Guide/AssignedToursPage";
 
 export const router = createBrowserRouter([
     {
@@ -84,6 +85,10 @@ export const router = createBrowserRouter([
             {
                 path: 'manage-stories',
                 element: <PrivateRoute><ManageStories /></PrivateRoute>
+            },
+            {
+                path: 'assigned-tours',
+                element: <PrivateRoute><AssignedToursPage /></PrivateRoute>
             },
             {
                 path: 'update-story/:id',

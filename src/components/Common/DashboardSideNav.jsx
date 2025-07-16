@@ -61,7 +61,7 @@ const DashboardSideNav = ({ emailId }) => {
     return (
       <>
         <li>
-          <NavLink to="/my-bookings">
+          <NavLink to="assigned-tours">
             <RiRoadMapLine className="mr-2" />
             My Assigned Tours
           </NavLink>
