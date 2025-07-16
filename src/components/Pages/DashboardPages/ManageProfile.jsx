@@ -43,6 +43,7 @@ export default function ManageProfile() {
     firstName,
     lastName,
     email,
+    photo,
     phoneNumber,
     dateOfBirth,
     role,
@@ -78,6 +79,7 @@ export default function ManageProfile() {
       )}
 
       <div className="grid gap-4">
+        <img src={photo} alt={firstName} className="w-20 rounded-full border"/>
         <p>
           <span className="font-semibold">Name:</span> {firstName} {lastName}
         </p>

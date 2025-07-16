@@ -67,13 +67,13 @@ const DashboardSideNav = ({ emailId }) => {
           </NavLink>
         </li>
         <li>
-          <NavLink to="/add-stories">
+          <NavLink to="add-stories">
             <MdAddCircleOutline className="mr-2" />
             Add Stories
           </NavLink>
         </li>
         <li>
-          <NavLink to="/manage-stories">
+          <NavLink to="manage-stories">
             <VscCommentDiscussion className="mr-2" />
             Manage Stories
           </NavLink>
@@ -97,7 +97,7 @@ const DashboardSideNav = ({ emailId }) => {
           </NavLink>
         </li>
         <li>
-          <NavLink to="/add-stories">
+          <NavLink to="manage-candidates">
             <BiUserCircle className="mr-2" />
             Manage Candidates
           </NavLink>

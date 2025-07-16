@@ -13,6 +13,7 @@ import AddStory from "../components/Pages/DashboardPages/AddStory";
 import ManageStories from "../components/Pages/DashboardPages/ManageStories";
 import UpdateStory from "../components/Pages/DashboardPages/UpdateStory";
 import JoinAsGuide from "../components/Pages/DashboardPages/Tourist/JoinAsGuide";
+import ManageCandidates from "../components/Pages/DashboardPages/Admin/ManageCandidates";
 
 export const router = createBrowserRouter([
     {
@@ -69,6 +70,10 @@ export const router = createBrowserRouter([
             {
                 path: 'join-as-guide',
                 element: <PrivateRoute><JoinAsGuide /></PrivateRoute>
+            },
+            {
+                path: 'manage-candidates',
+                element: <PrivateRoute><ManageCandidates /></PrivateRoute>
             }
         ]
     }

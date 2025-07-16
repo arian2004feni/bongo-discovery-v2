@@ -7,6 +7,7 @@ export default function EditProfileModal({ userData, onClose, refetch }) {
     defaultValues: {
       firstName: userData.firstName,
       lastName: userData.lastName,
+      photo: userData.photo,
       dateOfBirth: userData.dateOfBirth,
       phoneNumber: userData.phoneNumber,
       address: userData.address,
