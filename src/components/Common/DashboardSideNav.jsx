@@ -91,7 +91,7 @@ const DashboardSideNav = ({ emailId }) => {
           </NavLink>
         </li>
         <li>
-          <NavLink to="/add-stories">
+          <NavLink to="manage-users">
             <RiGroupLine className="mr-2" />
             Manage Users
           </NavLink>

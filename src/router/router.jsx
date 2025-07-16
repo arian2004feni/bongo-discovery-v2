@@ -18,6 +18,8 @@ import TourGuideProfile from "../pages/TourGuideProfile";
 import PackageDetails from "../pages/PackageDetails";
 import MyBookings from "../components/Pages/DashboardPages/Tourist/MyBookings";
 import CommunityPage from "../pages/CommunityPage";
+import AllTripsPage from "../pages/AllTripsPage";
+import ManageUsers from "../components/Pages/DashboardPages/Admin/ManageUsers";
 
 export const router = createBrowserRouter([
     {
@@ -35,6 +37,10 @@ export const router = createBrowserRouter([
             {
                 path: 'community',
                 Component: CommunityPage
+            },
+            {
+                path: 'trips',
+                Component: AllTripsPage
             },
             {
                 path: '/login',
@@ -90,6 +96,10 @@ export const router = createBrowserRouter([
             {
                 path: 'manage-candidates',
                 element: <PrivateRoute><ManageCandidates /></PrivateRoute>
+            },
+            {
+                path: 'manage-users',
+                element: <PrivateRoute><ManageUsers /></PrivateRoute>
             },
             {
                 path: 'my-bookings',
