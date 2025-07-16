@@ -15,6 +15,8 @@ import UpdateStory from "../components/Pages/DashboardPages/UpdateStory";
 import JoinAsGuide from "../components/Pages/DashboardPages/Tourist/JoinAsGuide";
 import ManageCandidates from "../components/Pages/DashboardPages/Admin/ManageCandidates";
 import TourGuideProfile from "../pages/TourGuideProfile";
+import PackageDetails from "../pages/PackageDetails";
+import MyBookings from "../components/Pages/DashboardPages/Tourist/MyBookings";
 
 export const router = createBrowserRouter([
     {
@@ -44,6 +46,10 @@ export const router = createBrowserRouter([
             {
                 path: '/tour-guide/:email',
                 Component: TourGuideProfile
+            },
+            {
+                path: 'packages/:slug',
+                Component: PackageDetails
             }
         ]
     },
@@ -79,6 +85,10 @@ export const router = createBrowserRouter([
             {
                 path: 'manage-candidates',
                 element: <PrivateRoute><ManageCandidates /></PrivateRoute>
+            },
+            {
+                path: 'my-bookings',
+                element: <PrivateRoute><MyBookings /></PrivateRoute>
             }
         ]
     }

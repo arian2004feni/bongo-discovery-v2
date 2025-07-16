@@ -16,7 +16,7 @@ export default function TouristStorySection() {
       .catch((err) => console.error("Failed to load stories:", err));
   }, []);
 
-  const handleShare = (url) => {
+  const handleShare = () => {
     if (!user) {
       navigate("/login");
     }
@@ -40,9 +40,9 @@ export default function TouristStorySection() {
               <div className="mt-4 flex items-center justify-between">
                 {user ? (
                   <FacebookShareButton url={window.location.href} quote={story.title}>
-                    <button className="btn btn-sm btn-outline btn-info flex items-center gap-2">
+                    <div className="btn btn-sm btn-outline btn-info flex items-center gap-2">
                       <FaFacebookF /> Share
-                    </button>
+                    </div>
                   </FacebookShareButton>
                 ) : (
                   <button

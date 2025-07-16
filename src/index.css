@@ -42,3 +42,12 @@ body {
 .modal {
   z-index: 999; /* or close to it */
 }
+
+.swiper-button-prev,
+.swiper-button-next {
+  @apply bg-base-100 rounded-full size-7! m-0! ;
+}
+
+.swiper-button-prev:after, .swiper-button-next:after {
+    font-size: 14px !important;
+}
