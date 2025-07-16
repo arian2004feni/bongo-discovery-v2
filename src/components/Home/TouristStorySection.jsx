@@ -60,7 +60,7 @@ export default function TouristStorySection() {
 
       <div className="text-center mt-10">
         <button
-          onClick={() => navigate("/stories")}
+          onClick={() => navigate("/community")}
           className="btn btn-primary"
         >
           View All Stories

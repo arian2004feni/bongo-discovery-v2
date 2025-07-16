@@ -137,7 +137,7 @@ export default function PackageDetails() {
           <div
             key={guide._id}
             className="p-4 rounded shadow bg-base-200 hover:bg-base-100 transition cursor-pointer flex flex-col items-center"
-            onClick={() => navigate(`/tour-guides/${guide.email}`)}
+            onClick={() => navigate(`/tour-guide/${guide.email}`)}
           >
             <img
               src={guide.photo}

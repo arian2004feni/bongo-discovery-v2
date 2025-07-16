@@ -3,11 +3,16 @@ import axios from "axios";
 import { FacebookShareButton, FacebookIcon } from "react-share";
 import { useNavigate } from "react-router";
 import useAuth from "../hooks/useAuth"; // adjust if your path differs
+import { FaTimes } from "react-icons/fa";
 
 export default function CommunityPage() {
   const [stories, setStories] = useState([]);
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [selectedStory, setSelectedStory] = useState(null);
+
+  const openModal = (story) => setSelectedStory(story);
+  const closeModal = () => setSelectedStory(null);
 
   useEffect(() => {
     axios.get("http://localhost:3000/stories/all")
@@ -21,14 +26,14 @@ export default function CommunityPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {stories.map(story => (
-          <div key={story._id} className="bg-base-100 shadow-lg rounded-xl p-4">
-            <div className="flex flex-wrap gap-2 mb-3">
+          <div key={story._id} className="overflow-hidden bg-base-100 shadow-lg rounded-xl p-4">
+            <div className="flex gap-2 mb-3 rounded-xl overflow-hidden">
               {story.images?.map((url, i) => (
                 <img
                   key={i}
                   src={url}
                   alt="story"
-                  className="w-full h-40 object-cover rounded-md"
+                  className="w-full flex-1 h-40 object-cover rounded-md"
                 />
               ))}
             </div>
@@ -38,11 +43,11 @@ export default function CommunityPage() {
 
             <div className="flex justify-between items-center">
               <button
-                className="btn btn-outline btn-sm"
-                onClick={() => navigate(`/stories/${story._id}`)}
-              >
-                View Story
-              </button>
+              onClick={() => openModal(story)}
+              className="btn btn-outline btn-sm mt-2"
+            >
+              View Story
+            </button>
 
               <FacebookShareButton
                 url={`${window.location.origin}/stories/${story._id}`}
@@ -59,6 +64,44 @@ export default function CommunityPage() {
             </div>
           </div>
         ))}
+
+        {/* DaisyUI Modal */}
+      {selectedStory && (
+        <dialog id="story_modal" className="modal modal-open">
+          <div className="modal-box max-w-3xl">
+            <button
+              className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
+              onClick={closeModal}
+            >
+              <FaTimes />
+            </button>
+
+            <h3 className="text-2xl font-bold mb-2">{selectedStory.title}</h3>
+            <p className="mb-4">{selectedStory.description}</p>
+
+            {/* Multiple Images */}
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+              {selectedStory.images?.map((img, i) => (
+                <img
+                  key={i}
+                  src={img}
+                  alt={`Story ${i}`}
+                  className="w-full h-40 object-cover rounded"
+                />
+              ))}
+            </div>
+
+            <div className="mt-4 text-right">
+              <p className="text-sm text-gray-500">
+                Shared by: {selectedStory.email}
+              </p>
+            </div>
+          </div>
+          <form method="dialog" className="modal-backdrop">
+            <button onClick={closeModal}>close</button>
+          </form>
+        </dialog>
+      )}
       </div>
     </div>
   );
