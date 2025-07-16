@@ -19,7 +19,8 @@ export default function TourismAndGuideTabs() {
   }, []);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-10">
+    <div className="bg-base-200">
+        <div className="max-w-7xl mx-auto px-4 py-10">
       <h2 className="text-3xl font-bold mb-6 text-center">Explore & Connect</h2>
 
       <Tabs>
@@ -66,7 +67,7 @@ export default function TourismAndGuideTabs() {
         <TabPanel>
           <div className="grid md:grid-cols-3 gap-6">
             {guides.map((guide) => (
-              <div key={guide._id} className="card bg-base-100 shadow-md">
+              <div key={guide._id} className="card bg-base-300 pt-6 shadow-md">
                 <figure>
                   <img
                     src={
@@ -74,7 +75,7 @@ export default function TourismAndGuideTabs() {
                       "https://placehold.co/400x300?text=Tour+Guide"
                     }
                     alt={guide.name}
-                    className="h-48 w-full object-cover"
+                    className="h-48 w-48 rounded-full object-cover"
                   />
                 </figure>
                 <div className="card-body">
@@ -87,7 +88,7 @@ export default function TourismAndGuideTabs() {
                   </p>
                   <div className="card-actions justify-end mt-2">
                     <button
-                      onClick={() => navigate(`/guides/${guide._id}`)}
+                      onClick={() => navigate(`/tour-guide/${guide.email}`)}
                       className="btn btn-outline btn-secondary btn-sm"
                     >
                       View Profile
@@ -99,6 +100,7 @@ export default function TourismAndGuideTabs() {
           </div>
         </TabPanel>
       </Tabs>
+    </div>
     </div>
   );
 }

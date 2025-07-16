@@ -14,6 +14,7 @@ import ManageStories from "../components/Pages/DashboardPages/ManageStories";
 import UpdateStory from "../components/Pages/DashboardPages/UpdateStory";
 import JoinAsGuide from "../components/Pages/DashboardPages/Tourist/JoinAsGuide";
 import ManageCandidates from "../components/Pages/DashboardPages/Admin/ManageCandidates";
+import TourGuideProfile from "../pages/TourGuideProfile";
 
 export const router = createBrowserRouter([
     {
@@ -39,6 +40,10 @@ export const router = createBrowserRouter([
             {
                 path: 'login/password-recovery',
                 Component: ForgotPass
+            },
+            {
+                path: '/tour-guide/:email',
+                Component: TourGuideProfile
             }
         ]
     },
