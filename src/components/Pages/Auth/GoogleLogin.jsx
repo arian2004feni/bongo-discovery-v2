@@ -1,8 +1,8 @@
+import axios from "axios";
 import { useLocation, useNavigate } from "react-router";
 import Swal from "sweetalert2";
 import { getFirebaseAuthErrorMessage } from "../../../../getFirebaseAuthErrorMessage";
 import useAuth from "../../../hooks/useAuth";
-import axios from "axios";
 
 const GoogleLogin = () => {
   const { googleSignInUser, setLoading } = useAuth();
@@ -38,9 +38,9 @@ const GoogleLogin = () => {
         };
 
         axios
-          .post("http://localhost:3000/users", userData)
+          .post("https://bongo-discovery-server.vercel.app/users", userData)
           .then((res) => {
-            console.log("User added:", res.data);
+            // console.log("User added:", res.data);
           })
           .catch((err) => {
             console.error("Error adding user:", err);

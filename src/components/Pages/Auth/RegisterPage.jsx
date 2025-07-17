@@ -1,11 +1,11 @@
+import axios from "axios";
 import { updateProfile } from "firebase/auth";
 import { Link, useLocation, useNavigate } from "react-router";
-import { getFirebaseAuthErrorMessage } from "../../../../getFirebaseAuthErrorMessage";
-import registerBg from "./../../../assets/test1.jpg";
-import useAuth from "../../../hooks/useAuth";
 import Swal from "sweetalert2";
+import { getFirebaseAuthErrorMessage } from "../../../../getFirebaseAuthErrorMessage";
+import useAuth from "../../../hooks/useAuth";
+import registerBg from "./../../../assets/test1.jpg";
 import GoogleLogin from "./GoogleLogin";
-import axios from "axios";
 
 const RegisterPage = () => {
   const { createUser, setLoading } = useAuth();
@@ -23,7 +23,7 @@ const RegisterPage = () => {
     console.log(name, email, photo, password, "here");
     createUser(email, password)
       .then((res) => {
-        console.log(res.user);
+        // console.log(res.user);
         const userInfo = {
           displayName: name,
           photoURL: photo,
@@ -54,9 +54,9 @@ const RegisterPage = () => {
             };
 
             axios
-              .post("http://localhost:3000/users", userData)
+              .post("https://bongo-discovery-server.vercel.app/users", userData)
               .then((res) => {
-                console.log("User added:", res.data);
+                // console.log("User added:", res.data);
               })
               .catch((err) => {
                 console.error("Error adding user:", err);

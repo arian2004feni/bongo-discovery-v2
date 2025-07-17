@@ -1,7 +1,7 @@
-import { useParams } from "react-router";
-import { useEffect, useState } from "react";
 import axios from "axios";
-import { FaMapMarkerAlt, FaEnvelope } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import { FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
+import { useParams } from "react-router";
 import Swal from "sweetalert2";
 
 export default function TourGuideProfile() {
@@ -12,7 +12,7 @@ export default function TourGuideProfile() {
   useEffect(() => {
     // Fetch tour guide info
     axios
-      .get(`http://localhost:3000/users/${email}`)
+      .get(`https://bongo-discovery-server.vercel.app/users/${email}`)
       .then((res) => setGuide(res.data))
       .catch(() => {
         Swal.fire("Error", "Tour guide not found", "error");
@@ -20,7 +20,7 @@ export default function TourGuideProfile() {
 
     // Fetch guide stories
     axios
-      .get(`http://localhost:3000/stories?email=${email}`)
+      .get(`https://bongo-discovery-server.vercel.app/user/stories?email=${email}`)
       .then((res) => setStories(res.data))
       .catch(() => {
         Swal.fire("Error", "Could not load stories", "error");

@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
 import axios from "axios";
+import { useEffect, useState } from "react";
 import { Link } from "react-router";
 
 export default function AllTripsPage() {
   const [packages, setPackages] = useState([]);
 
   useEffect(() => {
-    axios.get("http://localhost:3000/packages")
+    axios.get("https://bongo-discovery-server.vercel.app/packages")
       .then((res) => setPackages(res.data))
       .catch((err) => console.error("Error fetching packages:", err));
   }, []);

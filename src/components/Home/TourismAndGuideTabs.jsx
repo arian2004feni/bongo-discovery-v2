@@ -1,22 +1,58 @@
-import { useEffect, useState } from "react";
 import axios from "axios";
-import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
-import "react-tabs/style/react-tabs.css";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
+import "react-tabs/style/react-tabs.css";
+
+// Reusable retry fetch function
+const fetchWithRetry = async (url, retries = 3, delay = 1000) => {
+  for (let i = 0; i < retries; i++) {
+    try {
+      const res = await axios.get(url);
+      return res.data;
+    } catch (err) {
+      if (i === retries - 1) throw err;
+      await new Promise((res) => setTimeout(res, delay));
+    }
+  }
+};
 
 export default function TourismAndGuideTabs() {
   const [packages, setPackages] = useState([]);
   const [guides, setGuides] = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios
-      .get("http://localhost:3000/packages/random")
-      .then((res) => setPackages(res.data));
-    axios
-      .get("http://localhost:3000/tour-guides/random")
-      .then((res) => setGuides(res.data));
+    const loadData = async () => {
+      try {
+        const [pkgData, guideData] = await Promise.all([
+          fetchWithRetry("https://bongo-discovery-server.vercel.app/packages/random"),
+          fetchWithRetry("https://bongo-discovery-server.vercel.app/tour-guides/random"),
+        ]);
+        setPackages(pkgData);
+        setGuides(guideData);
+      } catch (err) {
+        console.error("❌ Failed to load homepage data:", err.message);
+      } finally {
+        setLoading(false); // Optional
+      }
+    };
+
+    loadData();
   }, []);
+
+  // useEffect(() => {
+  //   axios
+  //     .get("https://bongo-discovery-server.vercel.app/packages/random")
+  //     .then((res) => setPackages(res.data));
+  //   axios
+  //     .get("https://bongo-discovery-server.vercel.app/tour-guides/random")
+  //     .then((res) => setGuides(res.data));
+  // }, []);
+
+  if (loading) return <div>Loading homepage data...</div>;
+
 
   return (
     <div className="bg-base-200">

@@ -1,5 +1,5 @@
-import { useForm } from "react-hook-form";
 import axios from "axios";
+import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 import useAuth from "../../../../hooks/useAuth";
 
@@ -17,7 +17,7 @@ export default function JoinAsGuide() {
     };
 
     try {
-      const res = await axios.post("http://localhost:3000/tour-guide/applications", applicationData);
+      const res = await axios.post("https://bongo-discovery-server.vercel.app/tour-guide/applications", applicationData);
 
       if (res.data.insertedId || res.status === 200) {
         Swal.fire({

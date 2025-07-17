@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router";
 import axios from "axios";
-import Swal from "sweetalert2";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { FaTimes, FaPlus } from "react-icons/fa";
+import { FaPlus, FaTimes } from "react-icons/fa";
+import { useNavigate, useParams } from "react-router";
+import Swal from "sweetalert2";
 
 export default function UpdateStory() {
   const { id } = useParams();
@@ -14,7 +14,7 @@ export default function UpdateStory() {
   const { register, handleSubmit, reset } = useForm();
 
   useEffect(() => {
-    axios.get(`http://localhost:3000/stories/${id}`).then((res) => {
+    axios.get(`https://bongo-discovery-server.vercel.app/stories/${id}`).then((res) => {
       setStory(res.data);
       reset({
         title: res.data.title,
@@ -31,7 +31,7 @@ export default function UpdateStory() {
     }).then((res) => {
       if (res.isConfirmed) {
         axios
-          .patch(`http://localhost:3000/stories/${id}/remove-image`, {
+          .patch(`https://bongo-discovery-server.vercel.app/stories/${id}/remove-image`, {
             url: imgUrl,
           })
           .then(() => {
@@ -83,14 +83,14 @@ export default function UpdateStory() {
       }
 
       // 2. Update title/description
-      await axios.patch(`http://localhost:3000/stories/${id}`, {
+      await axios.patch(`https://bongo-discovery-server.vercel.app/stories/${id}`, {
         title: data.title,
         description: data.description,
       });
 
       // 3. Add new images with $push
       if (uploadedUrls.length) {
-        await axios.patch(`http://localhost:3000/stories/${id}/add-images`, {
+        await axios.patch(`https://bongo-discovery-server.vercel.app/stories/${id}/add-images`, {
           urls: uploadedUrls,
         });
       }
@@ -101,7 +101,7 @@ export default function UpdateStory() {
     } catch (err) {
       Swal.close();
       Swal.fire("Error", "Failed to update story.", "error");
-      console.log(err);
+      // console.log(err);
     }
   };
 

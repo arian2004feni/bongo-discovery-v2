@@ -1,12 +1,12 @@
-import { useParams, useNavigate } from "react-router";
-import { useEffect, useState } from "react";
 import axios from "axios";
-import { useForm, Controller } from "react-hook-form";
-import Flatpickr from "react-flatpickr";
-import Swal from "sweetalert2";
 import "flatpickr/dist/themes/material_green.css";
-import useAuth from "../hooks/useAuth";
+import { useEffect, useState } from "react";
+import Flatpickr from "react-flatpickr";
+import { Controller, useForm } from "react-hook-form";
+import { useNavigate, useParams } from "react-router";
+import Swal from "sweetalert2";
 import PackageImageCarousel from "../components/ImagesGallery";
+import useAuth from "../hooks/useAuth";
 
 export default function PackageDetails() {
   const { slug } = useParams();
@@ -23,27 +23,28 @@ export default function PackageDetails() {
     formState: { errors },
   } = useForm();
 
+
   useEffect(() => {
-    axios.get(`http://localhost:3000/packages/${slug}`).then((res) => {
+    axios.get(`https://bongo-discovery-server.vercel.app/packages/${slug}`).then((res) => {
       setPkg(res.data);
       setValue("packageName", res.data.packageName);
       setValue("price", res.data.pricePerPerson);
     });
 
-    axios.get("http://localhost:3000/tour-guides").then((res) => {
+    axios.get("https://bongo-discovery-server.vercel.app/tour-guides").then((res) => {
       setGuides(res.data);
     });
 
-    axios.get(`http://localhost:3000/users/${user?.email}/role`).then((res) => {
-      setRole(res.data);
+    axios.get(`https://bongo-discovery-server.vercel.app/users/${user?.email}/role`).then((res) => {
+      setRole(res.data.role);
     });
   }, [slug, setValue, setRole, user]);
 
-  console.log(role);
+  // console.log(role);
   const onSubmit = async (data) => {
     if (!user) return navigate("/login");
 
-    if (role.role !== "tourist")
+    if (role !== "tourist")
       return Swal.fire("Error", "Only Tourist can book a tour", "error");
 
     // Find the guide by name
@@ -66,7 +67,10 @@ export default function PackageDetails() {
     };
 
     try {
-      await axios.post("http://localhost:3000/bookings", bookingData);
+      await axios.post(
+        "https://bongo-discovery-server.vercel.app/bookings",
+        bookingData
+      );
       Swal.fire({
         icon: "success",
         title: "Confirm your Booking",

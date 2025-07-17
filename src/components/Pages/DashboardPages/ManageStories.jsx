@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
 import axios from "axios";
-import Swal from "sweetalert2";
+import { useEffect, useState } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { useNavigate } from "react-router";
+import Swal from "sweetalert2";
 import useAuth from "../../../hooks/useAuth";
 
 export default function ManageStories() {
@@ -10,12 +10,31 @@ export default function ManageStories() {
   const { user } = useAuth();
   const navigate = useNavigate();
 
+  // useEffect(() => {
+  //   if (!user?.email) return;
+  //   axios
+  //     .get(
+  //       `https://bongo-discovery-server.vercel.app/user/stories?email=${user?.email}`
+  //     )
+  //     .then((res) => setStories(res.data))
+  //     .catch((err) => console.error(err));
+  // }, [user?.email, setStories]);
+
+  const fetchStories = async () => {
+    if (!user?.email) return;
+    try {
+      const res = await axios.get(
+        `https://bongo-discovery-server.vercel.app/user/stories?email=${user.email}`
+      );
+      setStories(res.data);
+    } catch (err) {
+      console.error("❌ Failed to load stories:", err);
+    }
+  };
+
   useEffect(() => {
-    axios
-      .get(`http://localhost:3000/stories?email=${user?.email}`)
-      .then((res) => setStories(res.data))
-      .catch((err) => console.error(err));
-  }, [user?.email]);
+    fetchStories(); // refetch on page load
+  }, [user?.email, location.pathname]); // listen to path change
 
   const handleDelete = (id) => {
     Swal.fire({
@@ -27,7 +46,7 @@ export default function ManageStories() {
     }).then((result) => {
       if (result.isConfirmed) {
         axios
-          .delete(`http://localhost:3000/stories/${id}`)
+          .delete(`https://bongo-discovery-server.vercel.app/stories/${id}`)
           .then((res) => {
             if (res.data.deletedCount > 0) {
               Swal.fire("Deleted!", "Your story has been deleted.", "success");
@@ -49,7 +68,9 @@ export default function ManageStories() {
         {stories.map((story) => (
           <div key={story._id} className="bg-base-200 rounded-lg p-4 shadow">
             <h3 className="text-xl font-bold">{story.title}</h3>
-            <p className="text-gray-600 mb-2">{story.description?.slice(0, 100)}...</p>
+            <p className="text-gray-600 mb-2">
+              {story.description?.slice(0, 100)}...
+            </p>
             <div className="flex flex-wrap gap-2 mb-3">
               {story.images?.map((img, i) => (
                 <img

@@ -1,9 +1,9 @@
-import { useForm } from "react-hook-form";
-import { useState } from "react";
-import Swal from "sweetalert2";
 import axios from "axios";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { FaImage, FaPlus, FaTimes } from "react-icons/fa";
 import { useNavigate } from "react-router";
+import Swal from "sweetalert2";
 import useAuth from "../../../hooks/useAuth";
 
 export default function AddStory() {
@@ -61,7 +61,7 @@ export default function AddStory() {
       };
 
       // POST to your backend
-      const result = await axios.post("http://localhost:3000/stories", story);
+      const result = await axios.post("https://bongo-discovery-server.vercel.app/stories", story);
 
       Swal.close();
 

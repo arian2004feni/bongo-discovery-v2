@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
 import axios from "axios";
-import { FacebookShareButton, FacebookIcon } from "react-share";
-import { useNavigate } from "react-router";
-import useAuth from "../hooks/useAuth"; // adjust if your path differs
+import { useEffect, useState } from "react";
 import { FaTimes } from "react-icons/fa";
+import { useNavigate } from "react-router";
+import { FacebookIcon, FacebookShareButton } from "react-share";
+import useAuth from "../hooks/useAuth"; // adjust if your path differs
 
 export default function CommunityPage() {
   const [stories, setStories] = useState([]);
@@ -15,7 +15,7 @@ export default function CommunityPage() {
   const closeModal = () => setSelectedStory(null);
 
   useEffect(() => {
-    axios.get("http://localhost:3000/stories/all")
+    axios.get("https://bongo-discovery-server.vercel.app/stories/all")
       .then(res => setStories(res.data))
       .catch(err => console.error("Error fetching stories:", err));
   }, []);

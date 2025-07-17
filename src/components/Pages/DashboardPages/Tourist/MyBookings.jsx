@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
-import useAuth from "../../../../hooks/useAuth";
 import axios from "axios";
-import Swal from "sweetalert2";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+import Swal from "sweetalert2";
+import useAuth from "../../../../hooks/useAuth";
 
 export default function MyBookings() {
   const { user } = useAuth();
@@ -12,7 +12,7 @@ export default function MyBookings() {
   useEffect(() => {
     if (!user?.email) return;
     axios
-      .get(`http://localhost:3000/bookings?email=${user.email}`)
+      .get(`https://bongo-discovery-server.vercel.app/bookings/tourist?touristEmail=${user?.email}`)
       .then((res) => setBookings(res.data))
       .catch((err) => console.error(err));
   }, [user]);
@@ -29,7 +29,7 @@ export default function MyBookings() {
     if (!confirm.isConfirmed) return;
 
     try {
-      await axios.delete(`http://localhost:3000/bookings/${id}`);
+      await axios.delete(`https://bongo-discovery-server.vercel.app/bookings/${id}`);
       setBookings((prev) => prev.filter((b) => b._id !== id));
       Swal.fire("Cancelled!", "Booking has been cancelled.", "success");
     } catch (err) {

@@ -1,20 +1,49 @@
-import { useEffect, useState } from "react";
 import axios from "axios";
-import { FacebookShareButton } from "react-share";
+import { useEffect, useState } from "react";
 import { FaFacebookF } from "react-icons/fa";
 import { useNavigate } from "react-router";
+import { FacebookShareButton } from "react-share";
 import useAuth from "../../hooks/useAuth";
 
 export default function TouristStorySection() {
   const [stories, setStories] = useState([]);
-  const { user } = useAuth();
+  const { user, setLoading } = useAuth();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    axios.get("http://localhost:3000/stories/random")
-      .then((res) => setStories(res.data))
-      .catch((err) => console.error("Failed to load stories:", err));
+  const fetchWithRetry = async (url, retries = 3, delay = 1000) => {
+  for (let i = 0; i < retries; i++) {
+    try {
+      const res = await axios.get(url);
+      return res.data;
+    } catch (err) {
+      if (i === retries - 1) throw err;
+      await new Promise((res) => setTimeout(res, delay));
+    }
+  }
+};
+
+useEffect(() => {
+    const loadStories = async () => {
+      try {
+        const data = await fetchWithRetry(
+          "https://bongo-discovery-server.vercel.app/stories/random"
+        );
+        setStories(data);
+      } catch (err) {
+        console.error("❌ Failed to load stories:", err.message);
+      } finally {
+        setLoading(false); // optional
+      }
+    };
+
+    loadStories();
   }, []);
+
+  // useEffect(() => {
+  //   axios.get("https://bongo-discovery-server.vercel.app/stories/random")
+  //     .then((res) => setStories(res.data))
+  //     .catch((err) => console.error("Failed to load stories:", err));
+  // }, []);
 
   const handleShare = () => {
     if (!user) {

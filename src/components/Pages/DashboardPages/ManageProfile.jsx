@@ -12,12 +12,12 @@ export default function ManageProfile() {
   const [adminStats, setAdminStats] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
 
-  console.log(userData);
+  // console.log(userData);
 
   // useEffect(() => {
   //   if (userData?.role === "admin") {
   //     axios
-  //       .get("http://localhost:3000/admin/stats")
+  //       .get("https://bongo-discovery-server.vercel.app/admin/stats")
   //       .then((res) => setAdminStats(res.data))
   //       .catch((err) => console.error(err));
   //   }
@@ -110,7 +110,7 @@ export default function ManageProfile() {
           onClose={() => setIsOpen(false)}
           refetch={() => {
             axios
-              .get(`http://localhost:3000/users/${user.email}`)
+              .get(`https://bongo-discovery-server.vercel.app/users/${user.email}`)
               .then((res) => setUserData(res.data));
           }}
         />

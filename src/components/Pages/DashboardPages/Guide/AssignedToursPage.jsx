@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
-import useAuth from "../../../../hooks/useAuth";
 import axios from "axios";
+import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
+import useAuth from "../../../../hooks/useAuth";
 
 export default function AssignedToursPage() {
   const { user } = useAuth();
@@ -10,7 +10,7 @@ export default function AssignedToursPage() {
   const fetchAssignedTours = async () => {
     try {
       const res = await axios.get(
-        `http://localhost:3000/bookings?tourGuideEmail=${user?.email}`
+        `https://bongo-discovery-server.vercel.app/bookings/guide?tourGuideEmail=${user?.email}`
       );
       setAssignedTours(res.data);
     } catch (error) {
@@ -26,7 +26,7 @@ export default function AssignedToursPage() {
     if (booking.status !== "in-review") return;
 
     try {
-      await axios.patch(`http://localhost:3000/bookings/${booking._id}/status`, {
+      await axios.patch(`https://bongo-discovery-server.vercel.app/bookings/${booking._id}/status`, {
         status: "accepted",
       });
 
@@ -51,7 +51,7 @@ export default function AssignedToursPage() {
     if (!confirm.isConfirmed) return;
 
     try {
-      await axios.patch(`http://localhost:3000/bookings/${booking._id}/status`, {
+      await axios.patch(`https://bongo-discovery-server.vercel.app/bookings/${booking._id}/status`, {
         status: "rejected",
       });
 
