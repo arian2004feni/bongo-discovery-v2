@@ -17,7 +17,7 @@ export default function ManageProfile() {
   // useEffect(() => {
   //   if (userData?.role === "admin") {
   //     axios
-  //       .get("https://bongo-discovery-server.vercel.app/admin/stats")
+  //       .get("http://localhost:3000/admin/stats")
   //       .then((res) => setAdminStats(res.data))
   //       .catch((err) => console.error(err));
   //   }
@@ -110,7 +110,7 @@ export default function ManageProfile() {
           onClose={() => setIsOpen(false)}
           refetch={() => {
             axios
-              .get(`https://bongo-discovery-server.vercel.app/users/${user.email}`)
+              .get(`http://localhost:3000/users/${user.email}`)
               .then((res) => setUserData(res.data));
           }}
         />

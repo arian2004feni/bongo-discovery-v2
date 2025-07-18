@@ -19,7 +19,7 @@ const DashboardSideNav = ({ emailId }) => {
 
   useEffect(() => {
     axios
-      .get(`https://bongo-discovery-server.vercel.app/users/${emailId.email}/role`)
+      .get(`http://localhost:3000/users/${emailId.email}/role`)
       .then((res) => setUserRole(res.data))
       .catch((err) => console.error(err));
   }, []);

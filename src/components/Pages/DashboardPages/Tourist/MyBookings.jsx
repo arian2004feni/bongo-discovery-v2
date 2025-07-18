@@ -12,7 +12,7 @@ export default function MyBookings() {
   useEffect(() => {
     if (!user?.email) return;
     axios
-      .get(`https://bongo-discovery-server.vercel.app/bookings/tourist?touristEmail=${user?.email}`)
+      .get(`http://localhost:3000/bookings/tourist?touristEmail=${user?.email}`)
       .then((res) => setBookings(res.data))
       .catch((err) => console.error(err));
   }, [user]);
@@ -29,7 +29,7 @@ export default function MyBookings() {
     if (!confirm.isConfirmed) return;
 
     try {
-      await axios.delete(`https://bongo-discovery-server.vercel.app/bookings/${id}`);
+      await axios.delete(`http://localhost:3000/bookings/${id}`);
       setBookings((prev) => prev.filter((b) => b._id !== id));
       Swal.fire("Cancelled!", "Booking has been cancelled.", "success");
     } catch (err) {

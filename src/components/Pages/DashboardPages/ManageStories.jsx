@@ -14,7 +14,7 @@ export default function ManageStories() {
   //   if (!user?.email) return;
   //   axios
   //     .get(
-  //       `https://bongo-discovery-server.vercel.app/user/stories?email=${user?.email}`
+  //       `http://localhost:3000/user/stories?email=${user?.email}`
   //     )
   //     .then((res) => setStories(res.data))
   //     .catch((err) => console.error(err));
@@ -24,7 +24,7 @@ export default function ManageStories() {
     if (!user?.email) return;
     try {
       const res = await axios.get(
-        `https://bongo-discovery-server.vercel.app/user/stories?email=${user.email}`
+        `http://localhost:3000/user/stories?email=${user.email}`
       );
       setStories(res.data);
     } catch (err) {
@@ -46,7 +46,7 @@ export default function ManageStories() {
     }).then((result) => {
       if (result.isConfirmed) {
         axios
-          .delete(`https://bongo-discovery-server.vercel.app/stories/${id}`)
+          .delete(`http://localhost:3000/stories/${id}`)
           .then((res) => {
             if (res.data.deletedCount > 0) {
               Swal.fire("Deleted!", "Your story has been deleted.", "success");

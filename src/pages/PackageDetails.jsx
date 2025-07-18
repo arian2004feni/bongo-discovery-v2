@@ -25,17 +25,17 @@ export default function PackageDetails() {
 
 
   useEffect(() => {
-    axios.get(`https://bongo-discovery-server.vercel.app/packages/${slug}`).then((res) => {
+    axios.get(`http://localhost:3000/packages/${slug}`).then((res) => {
       setPkg(res.data);
       setValue("packageName", res.data.packageName);
       setValue("price", res.data.pricePerPerson);
     });
 
-    axios.get("https://bongo-discovery-server.vercel.app/tour-guides").then((res) => {
+    axios.get("http://localhost:3000/tour-guides").then((res) => {
       setGuides(res.data);
     });
 
-    axios.get(`https://bongo-discovery-server.vercel.app/users/${user?.email}/role`).then((res) => {
+    axios.get(`http://localhost:3000/users/${user?.email}/role`).then((res) => {
       setRole(res.data.role);
     });
   }, [slug, setValue, setRole, user]);
@@ -68,7 +68,7 @@ export default function PackageDetails() {
 
     try {
       await axios.post(
-        "https://bongo-discovery-server.vercel.app/bookings",
+        "http://localhost:3000/bookings",
         bookingData
       );
       Swal.fire({

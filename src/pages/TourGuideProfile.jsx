@@ -12,7 +12,7 @@ export default function TourGuideProfile() {
   useEffect(() => {
     // Fetch tour guide info
     axios
-      .get(`https://bongo-discovery-server.vercel.app/users/${email}`)
+      .get(`http://localhost:3000/users/${email}`)
       .then((res) => setGuide(res.data))
       .catch(() => {
         Swal.fire("Error", "Tour guide not found", "error");
@@ -20,7 +20,7 @@ export default function TourGuideProfile() {
 
     // Fetch guide stories
     axios
-      .get(`https://bongo-discovery-server.vercel.app/user/stories?email=${email}`)
+      .get(`http://localhost:3000/user/stories?email=${email}`)
       .then((res) => setStories(res.data))
       .catch(() => {
         Swal.fire("Error", "Could not load stories", "error");

@@ -98,7 +98,7 @@ export default function AddPackage() {
 //         exclusions: tags.exclusions,
 //       };
 
-//       const res = await axios.post("https://bongo-discovery-server.vercel.app/packages", payload);
+//       const res = await axios.post("http://localhost:3000/packages", payload);
 //       if (res.data.insertedId || res.status === 200) {
 //         Swal.fire("Success!", "Package added successfully.", "success");
 //         reset();
@@ -158,7 +158,7 @@ export default function AddPackage() {
         pricePerPerson: data.pricePerPerson,
       };
 
-      const res = await axios.post("https://bongo-discovery-server.vercel.app/packages", payload);
+      const res = await axios.post("http://localhost:3000/packages", payload);
 
       // 🔵 Close loading
       Swal.close();

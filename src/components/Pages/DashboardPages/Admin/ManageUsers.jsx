@@ -13,7 +13,7 @@ export default function ManageUsers() {
   const fetchUsers = async () => {
     try {
       const res = await axios.get(
-        `https://bongo-discovery-server.vercel.app/users`,
+        `http://localhost:3000/users`,
         {
           params: {
             role: roleFilter !== "all" ? roleFilter : undefined,
@@ -46,13 +46,13 @@ export default function ManageUsers() {
     try {
       // Delete from users collection
       await axios.delete(
-        `https://bongo-discovery-server.vercel.app/users/${userToDelete.email}`
+        `http://localhost:3000/users/${userToDelete.email}`
       );
 
       // If guide, also delete from tour-guides
       if (userToDelete.role === "guide") {
         await axios.delete(
-          `https://bongo-discovery-server.vercel.app/tour-guides/${userToDelete.email}`
+          `http://localhost:3000/tour-guides/${userToDelete.email}`
         );
       }
 

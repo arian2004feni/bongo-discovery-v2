@@ -9,7 +9,7 @@ export default function ManageCandidates() {
 
   const fetchApplications = () => {
     axios
-      .get("https://bongo-discovery-server.vercel.app/tour-guide/applications?status=pending")
+      .get("http://localhost:3000/tour-guide/applications?status=pending")
       .then((res) => setApplications(res.data))
       .catch((err) => console.error("Fetch error:", err));
   };
@@ -31,13 +31,13 @@ export default function ManageCandidates() {
 
     try {
       // 1. Update user role
-      await axios.patch(`https://bongo-discovery-server.vercel.app/users/${app.email}/role`, {
+      await axios.patch(`http://localhost:3000/users/${app.email}/role`, {
         role: "guide",
       });
 
       // 2. Update application status
       await axios.patch(
-        `https://bongo-discovery-server.vercel.app/tour-guide/applications/${app._id}/approve`
+        `http://localhost:3000/tour-guide/applications/${app._id}/approve`
       );
 
       // 3. Create tour guide record in separate collection
@@ -56,7 +56,7 @@ export default function ManageCandidates() {
         addedAt: new Date().toISOString(),
       };
 
-      await axios.post("https://bongo-discovery-server.vercel.app/tour-guides", guideInfo);
+      await axios.post("http://localhost:3000/tour-guides", guideInfo);
 
       // 4. Refresh list
       fetchApplications();
@@ -82,7 +82,7 @@ export default function ManageCandidates() {
     try {
       // 1. Update status to rejected
       await axios.patch(
-        `https://bongo-discovery-server.vercel.app/tour-guide/applications/${app._id}/reject`
+        `http://localhost:3000/tour-guide/applications/${app._id}/reject`
       );
 
       // 2. Refresh list

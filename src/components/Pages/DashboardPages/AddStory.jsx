@@ -61,7 +61,7 @@ export default function AddStory() {
       };
 
       // POST to your backend
-      const result = await axios.post("https://bongo-discovery-server.vercel.app/stories", story);
+      const result = await axios.post("http://localhost:3000/stories", story);
 
       Swal.close();
 

@@ -15,7 +15,7 @@ export default function CommunityPage() {
   const closeModal = () => setSelectedStory(null);
 
   useEffect(() => {
-    axios.get("https://bongo-discovery-server.vercel.app/stories/all")
+    axios.get("http://localhost:3000/stories/all")
       .then(res => setStories(res.data))
       .catch(err => console.error("Error fetching stories:", err));
   }, []);

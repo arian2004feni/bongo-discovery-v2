@@ -18,7 +18,7 @@ export default function EditProfileModal({ userData, onClose, refetch }) {
 
   const onSubmit = async (data) => {
     try {
-      await axios.patch(`https://bongo-discovery-server.vercel.app/users/${userData.email}`, data);
+      await axios.patch(`http://localhost:3000/users/${userData.email}`, data);
       Swal.fire("Updated!", "Your profile has been updated.", "success");
       refetch();
       onClose();

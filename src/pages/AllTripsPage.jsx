@@ -6,7 +6,7 @@ export default function AllTripsPage() {
   const [packages, setPackages] = useState([]);
 
   useEffect(() => {
-    axios.get("https://bongo-discovery-server.vercel.app/packages")
+    axios.get("http://localhost:3000/packages")
       .then((res) => setPackages(res.data))
       .catch((err) => console.error("Error fetching packages:", err));
   }, []);

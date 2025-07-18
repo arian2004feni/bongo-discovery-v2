@@ -14,7 +14,7 @@ export default function UpdateStory() {
   const { register, handleSubmit, reset } = useForm();
 
   useEffect(() => {
-    axios.get(`https://bongo-discovery-server.vercel.app/stories/${id}`).then((res) => {
+    axios.get(`http://localhost:3000/stories/${id}`).then((res) => {
       setStory(res.data);
       reset({
         title: res.data.title,
@@ -31,7 +31,7 @@ export default function UpdateStory() {
     }).then((res) => {
       if (res.isConfirmed) {
         axios
-          .patch(`https://bongo-discovery-server.vercel.app/stories/${id}/remove-image`, {
+          .patch(`http://localhost:3000/stories/${id}/remove-image`, {
             url: imgUrl,
           })
           .then(() => {
@@ -83,14 +83,14 @@ export default function UpdateStory() {
       }
 
       // 2. Update title/description
-      await axios.patch(`https://bongo-discovery-server.vercel.app/stories/${id}`, {
+      await axios.patch(`http://localhost:3000/stories/${id}`, {
         title: data.title,
         description: data.description,
       });
 
       // 3. Add new images with $push
       if (uploadedUrls.length) {
-        await axios.patch(`https://bongo-discovery-server.vercel.app/stories/${id}/add-images`, {
+        await axios.patch(`http://localhost:3000/stories/${id}/add-images`, {
           urls: uploadedUrls,
         });
       }

@@ -26,7 +26,7 @@ useEffect(() => {
     const loadStories = async () => {
       try {
         const data = await fetchWithRetry(
-          "https://bongo-discovery-server.vercel.app/stories/random"
+          "http://localhost:3000/stories/random"
         );
         setStories(data);
       } catch (err) {
@@ -40,7 +40,7 @@ useEffect(() => {
   }, []);
 
   // useEffect(() => {
-  //   axios.get("https://bongo-discovery-server.vercel.app/stories/random")
+  //   axios.get("http://localhost:3000/stories/random")
   //     .then((res) => setStories(res.data))
   //     .catch((err) => console.error("Failed to load stories:", err));
   // }, []);

@@ -38,7 +38,7 @@ const GoogleLogin = () => {
         };
 
         axios
-          .post("https://bongo-discovery-server.vercel.app/users", userData)
+          .post("http://localhost:3000/users", userData)
           .then((res) => {
             // console.log("User added:", res.data);
           })

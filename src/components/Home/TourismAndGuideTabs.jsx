@@ -27,8 +27,8 @@ export default function TourismAndGuideTabs() {
     const loadData = async () => {
       try {
         const [pkgData, guideData] = await Promise.all([
-          fetchWithRetry("https://bongo-discovery-server.vercel.app/packages/random"),
-          fetchWithRetry("https://bongo-discovery-server.vercel.app/tour-guides/random"),
+          fetchWithRetry("http://localhost:3000/packages/random"),
+          fetchWithRetry("http://localhost:3000/tour-guides/random"),
         ]);
         setPackages(pkgData);
         setGuides(guideData);
@@ -44,10 +44,10 @@ export default function TourismAndGuideTabs() {
 
   // useEffect(() => {
   //   axios
-  //     .get("https://bongo-discovery-server.vercel.app/packages/random")
+  //     .get("http://localhost:3000/packages/random")
   //     .then((res) => setPackages(res.data));
   //   axios
-  //     .get("https://bongo-discovery-server.vercel.app/tour-guides/random")
+  //     .get("http://localhost:3000/tour-guides/random")
   //     .then((res) => setGuides(res.data));
   // }, []);
 
