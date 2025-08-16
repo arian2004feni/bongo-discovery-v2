@@ -1,40 +1,22 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { useNavigate } from "react-router";
 import Swal from "sweetalert2";
 import useAuth from "../../../hooks/useAuth";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import { useQuery } from "@tanstack/react-query";
 
 export default function ManageStories() {
-  const [stories, setStories] = useState([]);
   const { user } = useAuth();
   const navigate = useNavigate();
+  const axiosSecure = useAxiosSecure();
 
-  // useEffect(() => {
-  //   if (!user?.email) return;
-  //   axios
-  //     .get(
-  //       `http://localhost:3000/user/stories?email=${user?.email}`
-  //     )
-  //     .then((res) => setStories(res.data))
-  //     .catch((err) => console.error(err));
-  // }, [user?.email, setStories]);
-
-  const fetchStories = async () => {
-    if (!user?.email) return;
-    try {
-      const res = await axios.get(
-        `http://localhost:3000/user/stories?email=${user.email}`
-      );
-      setStories(res.data);
-    } catch (err) {
-      console.error("❌ Failed to load stories:", err);
-    }
-  };
-
-  useEffect(() => {
-    fetchStories(); // refetch on page load
-  }, [user?.email, location.pathname]); // listen to path change
+  const { data: stories = [], refetch } = useQuery({
+    queryKey: ["all-tour-guides"],
+    queryFn: async () => {
+      const res = await axiosSecure.get(`/user/stories?email=${user?.email}`);
+      return res.data;
+    },
+  });
 
   const handleDelete = (id) => {
     Swal.fire({
@@ -45,12 +27,12 @@ export default function ManageStories() {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        axios
-          .delete(`http://localhost:3000/stories/${id}`)
+        axiosSecure
+          .delete(`/stories/${id}`)
           .then((res) => {
-            if (res.data.deletedCount > 0) {
+            if (res.data.deletedCount) {
               Swal.fire("Deleted!", "Your story has been deleted.", "success");
-              setStories((prev) => prev.filter((story) => story._id !== id));
+              refetch();
             }
           })
           .catch((err) => {

@@ -1,13 +1,15 @@
-import axios from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { FaImages, FaTimes, FaUpload } from "react-icons/fa";
 import Swal from "sweetalert2";
+import useAxiosSecure from "../../../../hooks/useAxiosSecure";
+import axios from "axios";
 
 export default function AddPackage() {
   const { register, handleSubmit, watch, reset } = useForm();
   const [imageFiles, setImageFiles] = useState([]);
   const [imagePreviews, setImagePreviews] = useState([]);
+  const axiosSecure = useAxiosSecure();
 //   const [tags, setTags] = useState({
 //     tourHighlights: [],
 //     inclusions: [],
@@ -158,7 +160,7 @@ export default function AddPackage() {
         pricePerPerson: data.pricePerPerson,
       };
 
-      const res = await axios.post("http://localhost:3000/packages", payload);
+      const res = await axiosSecure.post("/packages", payload);
 
       // 🔵 Close loading
       Swal.close();
@@ -180,7 +182,7 @@ export default function AddPackage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-base-200 rounded-lg shadow-md">
+    <div className="max-w-4xl mx-auto p-6 bg-base-200 rounded-lg shadow-md my-12">
       <h2 className="text-2xl font-bold mb-4">Add New Travel Package</h2>
       <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4">
         <input

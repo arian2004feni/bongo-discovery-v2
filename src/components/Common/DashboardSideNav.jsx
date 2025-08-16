@@ -1,5 +1,3 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
 import { BiUserCircle } from "react-icons/bi";
 import {
   MdAddCircleOutline,
@@ -14,41 +12,33 @@ import {
 import { VscCommentDiscussion } from "react-icons/vsc";
 import { NavLink } from "react-router";
 
-const DashboardSideNav = ({ emailId }) => {
-  const [userRole, setUserRole] = useState(null);
-
-  useEffect(() => {
-    axios
-      .get(`http://localhost:3000/users/${emailId.email}/role`)
-      .then((res) => setUserRole(res.data))
-      .catch((err) => console.error(err));
-  }, []);
-
+const DashboardSideNav = ({ userRole }) => {
+  
   if (userRole?.role === "tourist") {
     return (
       <>
         {/* Sidebar content here */}
 
         <li>
-          <NavLink to="my-bookings">
+          <NavLink  className='dashboard' to="my-bookings">
             <RiCalendarEventFill className="mr-2" />
             My Bookings
           </NavLink>
         </li>
         <li>
-          <NavLink to="manage-stories">
+          <NavLink  className='dashboard' to="manage-stories">
             <VscCommentDiscussion className="mr-2" />
             Manage Stories
           </NavLink>
         </li>
         <li>
-          <NavLink to="add-stories">
+          <NavLink  className='dashboard' to="add-stories">
             <MdAddCircleOutline className="mr-2" />
             Add Stories
           </NavLink>
         </li>
         <li>
-          <NavLink to="join-as-guide">
+          <NavLink  className='dashboard' to="join-as-guide">
             <MdTravelExplore className="mr-2" />
             Join as Tour Guide
           </NavLink>
@@ -61,19 +51,19 @@ const DashboardSideNav = ({ emailId }) => {
     return (
       <>
         <li>
-          <NavLink to="assigned-tours">
+          <NavLink  className='dashboard' to="assigned-tours">
             <RiRoadMapLine className="mr-2" />
             My Assigned Tours
           </NavLink>
         </li>
         <li>
-          <NavLink to="add-stories">
+          <NavLink  className='dashboard' to="add-stories">
             <MdAddCircleOutline className="mr-2" />
             Add Stories
           </NavLink>
         </li>
         <li>
-          <NavLink to="manage-stories">
+          <NavLink  className='dashboard' to="manage-stories">
             <VscCommentDiscussion className="mr-2" />
             Manage Stories
           </NavLink>
@@ -85,19 +75,19 @@ const DashboardSideNav = ({ emailId }) => {
     return (
       <>
         <li>
-          <NavLink to="add-package">
+          <NavLink  className='dashboard' to="add-package">
             <MdOutlineNoteAdd className="mr-2" />
             Add Package
           </NavLink>
         </li>
         <li>
-          <NavLink to="manage-users">
+          <NavLink  className='dashboard' to="manage-users">
             <RiGroupLine className="mr-2" />
             Manage Users
           </NavLink>
         </li>
         <li>
-          <NavLink to="manage-candidates">
+          <NavLink  className='dashboard' to="manage-candidates">
             <BiUserCircle className="mr-2" />
             Manage Candidates
           </NavLink>

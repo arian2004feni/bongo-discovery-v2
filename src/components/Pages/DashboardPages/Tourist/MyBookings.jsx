@@ -1,21 +1,31 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import Swal from "sweetalert2";
 import useAuth from "../../../../hooks/useAuth";
+import useAxiosSecure from "../../../../hooks/useAxiosSecure";
+import { useQuery } from "@tanstack/react-query";
 
 export default function MyBookings() {
   const { user } = useAuth();
-  const [bookings, setBookings] = useState([]);
   const navigate = useNavigate();
+  const axiosSecure = useAxiosSecure();
 
-  useEffect(() => {
-    if (!user?.email) return;
-    axios
-      .get(`http://localhost:3000/bookings/tourist?touristEmail=${user?.email}`)
-      .then((res) => setBookings(res.data))
-      .catch((err) => console.error(err));
-  }, [user]);
+  const formattedDate = (d) => {
+    const isoDate = d;
+    const date = new Date(isoDate);
+    const formatted = date.toLocaleDateString("en-GB"); // dd/mm/yyyy
+    // console.log(formatted);
+    return formatted;
+  };
+
+  const { data: bookings = [], refetch } = useQuery({
+    queryKey: ["my-bookings"],
+    queryFn: async () => {
+      const res = await axiosSecure.get(
+        `/bookings/tourist?touristEmail=${user?.email}`
+      );
+      return res.data;
+    },
+  });
 
   const handleCancel = async (id) => {
     const confirm = await Swal.fire({
@@ -27,14 +37,9 @@ export default function MyBookings() {
     });
 
     if (!confirm.isConfirmed) return;
-
-    try {
-      await axios.delete(`http://localhost:3000/bookings/${id}`);
-      setBookings((prev) => prev.filter((b) => b._id !== id));
-      Swal.fire("Cancelled!", "Booking has been cancelled.", "success");
-    } catch (err) {
-      Swal.fire("Error", "Failed to cancel booking", "error");
-    }
+    await axiosSecure.delete(`/bookings/${id}`);
+    Swal.fire("Cancelled!", "Booking has been cancelled.", "success");
+    refetch();
   };
 
   return (
@@ -56,7 +61,7 @@ export default function MyBookings() {
             <tr key={booking._id}>
               <td>{booking.packageName}</td>
               <td>{booking.tourGuideName}</td>
-              <td>{booking.tourDate}</td>
+              <td>{formattedDate(booking.tourDate)}</td>
               <td>{booking.price}৳</td>
               <td className="capitalize">{booking.status}</td>
               <td className="space-x-2">

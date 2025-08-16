@@ -1,16 +1,17 @@
-import axios from "axios";
-import { Link, useLocation, useNavigate } from "react-router";
+import { Link, Navigate, useLocation, useNavigate } from "react-router";
 import Swal from "sweetalert2";
 import { getFirebaseAuthErrorMessage } from "../../../../getFirebaseAuthErrorMessage";
 import useAuth from "../../../hooks/useAuth";
 import loginBg from "./../../../assets/test7.jpg";
 import ForgotPass from "./ForgotPass";
 import GoogleLogin from "./GoogleLogin";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const LoginPage = () => {
-  const { signInUser, setLoading, setEmailText } = useAuth();
+  const { signInUser, setLoading, setEmailText, loading, user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const axiosSecure = useAxiosSecure();
 
   const handleLogIn = (e) => {
     e.preventDefault();
@@ -38,19 +39,14 @@ const LoginPage = () => {
           },
           email: user.email,
           photo: user.photoURL,
-          createdAt: new Date().toISOString(),
-          lastLogin: new Date().toISOString(),
+          createdAt: new Date(user.metadata.creationTime).toISOString(),
+          lastLogin: new Date(user.metadata.lastSignInTime).toISOString(),
           role: "tourist",
         };
 
-        axios
-          .post("http://localhost:3000/users", userData)
-          .then((res) => {
-            // console.log("User added:", res.data);
-          })
-          .catch((err) => {
-            console.error("Error adding user:", err);
-          });
+        axiosSecure.post("/users", userData).then((res) => {
+          console.log(res.data);
+        });
         Swal.fire({
           icon: "success",
           title: "Login Successful ✅",
@@ -70,6 +66,14 @@ const LoginPage = () => {
         setLoading(false);
       });
   };
+
+  
+  if (loading) {
+    return <div className="text-center py-10">Loading...</div>;
+  }
+  if(user) {
+    return <Navigate to="/"/>
+  }
 
   return (
     <div className="relative w-full min-h-screen flex justify-center items-center bg-black/20 dark:bg-black/75 pt-20">

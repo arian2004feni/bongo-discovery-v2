@@ -1,12 +1,23 @@
 import { RiUserSettingsLine } from "react-icons/ri";
-import { Link, Outlet, useLoaderData, useParams } from "react-router";
+import { NavLink, Outlet, useParams } from "react-router";
 import DashboardSideNav from "../components/Common/DashboardSideNav";
 import Logo from "../components/Logo";
 import ThemeToggle from "../components/theme/ThemeToggle";
+import useAxiosSecure from "../hooks/useAxiosSecure";
+import { useQuery } from "@tanstack/react-query";
+import '../dashboard.css'
 
 const Dashboard = () => {
-const emailId = useParams();
-  const data = useLoaderData();
+  const emailId = useParams();
+  const axiosSecure = useAxiosSecure();
+
+  const {data: userRole={}} = useQuery({
+    queryKey: ['user-role', emailId?.email],
+    queryFn: async() => {
+      const res = await axiosSecure.get(`/users/${emailId.email}/role`);
+      return res.data;
+    }
+  })
 
   return (
     <div className="drawer lg:drawer-open">
@@ -41,7 +52,9 @@ const emailId = useParams();
           </div>
         </div>
         {/* Page content here */}
-        <Outlet context={data}></Outlet>
+        <div className="">
+          <Outlet></Outlet>
+        </div>
       </div>
       <div className="drawer-side">
         <label
@@ -57,20 +70,20 @@ const emailId = useParams();
           </div>
           {/* Sidebar Navigation */}
           <li>
-          <Link to={`/dashboard/${emailId?.email}/profile`}>
-            <RiUserSettingsLine className="mr-2" />
-            Manage Profile
-          </Link>
-        </li>
-          <DashboardSideNav emailId={emailId}/>
+            <NavLink className='dashboard' to={`/dashboard/${emailId?.email}/profile`}>
+              <RiUserSettingsLine className="mr-2" />
+              Manage Profile
+            </NavLink>
+          </li>
+          <DashboardSideNav userRole={userRole} />
           {/* Footer */}
           <footer className="mt-auto mb-2 text-center">
             <div className="divider"></div>
             Logged in as{" "}
             <span className="font-bold">{`${
-              (data?.role === "tourist" && "Tourist") ||
-              (data?.role === "guide" && "Tour Guide") ||
-              (data?.role === "admin" && "Admin") ||
+              (userRole?.role === "tourist" && "Tourist") ||
+              (userRole?.role === "guide" && "Tour Guide") ||
+              (userRole?.role === "admin" && "Admin") ||
               "N/A"
             }`}</span>
           </footer>

@@ -1,74 +1,72 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
 import { FaFacebookF } from "react-icons/fa";
 import { useNavigate } from "react-router";
 import { FacebookShareButton } from "react-share";
 import useAuth from "../../hooks/useAuth";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
+import { useQuery } from "@tanstack/react-query";
 
 export default function TouristStorySection() {
-  const [stories, setStories] = useState([]);
-  const { user, setLoading } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
+  const axiosSecure = useAxiosSecure();
 
-  const fetchWithRetry = async (url, retries = 3, delay = 1000) => {
-  for (let i = 0; i < retries; i++) {
-    try {
-      const res = await axios.get(url);
+  const {
+    data: randomStories = [],
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["random-stories"],
+    queryFn: async () => {
+      const res = await axiosSecure.get("stories/random");
       return res.data;
-    } catch (err) {
-      if (i === retries - 1) throw err;
-      await new Promise((res) => setTimeout(res, delay));
-    }
+    },
+  });
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <span className="loading loading-ring loading-lg"></span>
+      </div>
+    );
   }
-};
 
-useEffect(() => {
-    const loadStories = async () => {
-      try {
-        const data = await fetchWithRetry(
-          "http://localhost:3000/stories/random"
-        );
-        setStories(data);
-      } catch (err) {
-        console.error("❌ Failed to load stories:", err.message);
-      } finally {
-        setLoading(false); // optional
-      }
-    };
-
-    loadStories();
-  }, []);
-
-  // useEffect(() => {
-  //   axios.get("http://localhost:3000/stories/random")
-  //     .then((res) => setStories(res.data))
-  //     .catch((err) => console.error("Failed to load stories:", err));
-  // }, []);
-
+  if (error) {
+    return <p className="text-red-500">Error loading data.</p>;
+  }
   const handleShare = () => {
     if (!user) {
       navigate("/login");
     }
   };
-
   return (
     <div className="max-w-7xl mx-auto px-4 py-12">
       <h2 className="text-3xl font-bold text-center mb-8">Tourist Stories</h2>
 
       <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {stories.map((story) => (
-          <div key={story._id} className="bg-base-100 rounded-xl shadow-md overflow-hidden flex flex-col">
+        {randomStories.map((story) => (
+          <div
+            key={story._id}
+            className="bg-base-100 rounded-xl shadow-md overflow-hidden flex flex-col"
+          >
             <img
-              src={story.images?.[0] || "https://placehold.co/400x250?text=Story+Image"}
+              src={
+                story.images?.[0] ||
+                "https://placehold.co/400x250?text=Story+Image"
+              }
               alt="Story"
               className="h-40 object-cover w-full"
             />
             <div className="p-4 flex flex-col justify-between flex-1">
-              <h3 className="font-bold text-lg mb-2">{story.title}</h3>
-              <p className="text-sm text-gray-600 line-clamp-3">{story.description}</p>
+              <h3 className="font-bold text-lg mb-2 line-clamp-2">{story.title}</h3>
+              <p className="text-sm text-gray-600 line-clamp-3">
+                {story.description}
+              </p>
               <div className="mt-4 flex items-center justify-between">
                 {user ? (
-                  <FacebookShareButton url={window.location.href} quote={story.title}>
+                  <FacebookShareButton
+                    url={window.location.href}
+                    quote={story.title}
+                  >
                     <div className="btn btn-sm btn-outline btn-info flex items-center gap-2">
                       <FaFacebookF /> Share
                     </div>

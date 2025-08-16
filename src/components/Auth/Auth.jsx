@@ -2,7 +2,7 @@ import { Link } from "react-router";
 import useAuth from "../../hooks/useAuth";
 import Swal from "sweetalert2";
 
-const Auth = ({ atTop }) => {
+const Auth = ({ atTop, overHero }) => {
   const { setLoading, user, signOutUser } = useAuth();
   const handleLogOut = () => {
     Swal.fire({
@@ -49,13 +49,13 @@ const Auth = ({ atTop }) => {
 
   if (user) {
     return (
-      <div className="flex items-center">
+      <div className="flex mt-4 md:m-0 justify-center items-center">
         <div className="ml-2 dropdown dropdown-end">
           <div
             tabIndex={0}
             className="relative avatar cursor-pointer avatar-online"
           >
-            <div className=" w-11 border rounded-full">
+            <div className="w-11 border rounded-full">
               <img
                 src={user.photoURL}
                 alt={user.displayName || "User Avatar"}
@@ -87,7 +87,7 @@ const Auth = ({ atTop }) => {
         <button
           onClick={handleLogOut}
           className={`btn btn-ghost hover:bg-transparent outline-1 rounded-none -outline-offset-1 ${
-            atTop
+            atTop && overHero
               ? "outline-white hover:text-white"
               : "outline-black dark:outline-white"
           }  *:hover:bg-transparent rounded mx-2`}
@@ -99,11 +99,11 @@ const Auth = ({ atTop }) => {
   }
 
   return (
-    <div>
+    <div className="mt-4 md:m-0">
       <Link
         to="/login"
         className={`btn btn-ghost hover:bg-transparent outline-1 rounded-none -outline-offset-1 ${
-          atTop
+          atTop && overHero
             ? "outline-white hover:text-white"
             : "outline-black dark:outline-white"
         }  *:hover:bg-transparent rounded mx-2`}

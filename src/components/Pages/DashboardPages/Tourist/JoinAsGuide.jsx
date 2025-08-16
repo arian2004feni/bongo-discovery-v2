@@ -1,23 +1,25 @@
-import axios from "axios";
 import { useForm } from "react-hook-form";
 import Swal from "sweetalert2";
 import useAuth from "../../../../hooks/useAuth";
+import useAxiosSecure from "../../../../hooks/useAxiosSecure";
 
 export default function JoinAsGuide() {
   const { register, handleSubmit, reset } = useForm();
   const { user } = useAuth();
+  const axiosSecure = useAxiosSecure();
 
   const onSubmit = async (data) => {
     const applicationData = {
       ...data,
       email: user?.email,
       name: user?.displayName,
+      photo: user?.photoURL,
       status: "pending", // for admin review
       appliedAt: new Date().toISOString(),
     };
 
     try {
-      const res = await axios.post("http://localhost:3000/tour-guide/applications", applicationData);
+      const res = await axiosSecure.post("/tour-guide/applications", applicationData);
 
       if (res.data.insertedId || res.status === 200) {
         Swal.fire({

@@ -1,14 +1,15 @@
-import axios from "axios";
 import { updateProfile } from "firebase/auth";
-import { Link, useLocation, useNavigate } from "react-router";
+import { Link, Navigate, useLocation, useNavigate } from "react-router";
 import Swal from "sweetalert2";
 import { getFirebaseAuthErrorMessage } from "../../../../getFirebaseAuthErrorMessage";
 import useAuth from "../../../hooks/useAuth";
 import registerBg from "./../../../assets/test1.jpg";
 import GoogleLogin from "./GoogleLogin";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const RegisterPage = () => {
-  const { createUser, setLoading } = useAuth();
+  const { createUser, setLoading, loading, user } = useAuth();
+  const axiosSecure = useAxiosSecure();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -20,7 +21,6 @@ const RegisterPage = () => {
     const email = e.target.email.value;
     const password = e.target.password.value;
 
-    console.log(name, email, photo, password, "here");
     createUser(email, password)
       .then((res) => {
         // console.log(res.user);
@@ -48,19 +48,12 @@ const RegisterPage = () => {
               },
               email: user.email,
               photo: user.photoURL,
-              createdAt: new Date().toISOString(),
-              lastLogin: new Date().toISOString(),
+              createdAt: new Date(user.metadata.creationTime).toISOString(),
+              lastLogin: new Date(user.metadata.lastSignInTime).toISOString(),
               role: "tourist",
             };
 
-            axios
-              .post("http://localhost:3000/users", userData)
-              .then((res) => {
-                // console.log("User added:", res.data);
-              })
-              .catch((err) => {
-                console.error("Error adding user:", err);
-              });
+            axiosSecure.post("/users", userData);
             Swal.fire({
               icon: "success",
               title: "Registration Successful 🎉",
@@ -91,6 +84,14 @@ const RegisterPage = () => {
         });
       });
   };
+
+  if (loading) {
+    return <div className="text-center py-10">Loading...</div>;
+  }
+  if (user) {
+    return <Navigate to="/" />;
+  }
+
   return (
     <div className="relative w-full min-h-screen py-20 flex justify-center items-center bg-black/20 dark:bg-black/75">
       <img

@@ -5,6 +5,7 @@ import { FaImage, FaPlus, FaTimes } from "react-icons/fa";
 import { useNavigate } from "react-router";
 import Swal from "sweetalert2";
 import useAuth from "../../../hooks/useAuth";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 export default function AddStory() {
   const { register, handleSubmit, reset } = useForm();
@@ -12,6 +13,7 @@ export default function AddStory() {
   const [imagePreviews, setImagePreviews] = useState([]);
   const navigate = useNavigate();
   const { user } = useAuth();
+  const axiosSecure = useAxiosSecure();
 
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
@@ -61,7 +63,7 @@ export default function AddStory() {
       };
 
       // POST to your backend
-      const result = await axios.post("http://localhost:3000/stories", story);
+      const result = await axiosSecure.post("/stories", story);
 
       Swal.close();
 

@@ -1,20 +1,18 @@
-import axios from "axios";
 import "flatpickr/dist/themes/material_green.css";
-import { useEffect, useState } from "react";
 import Flatpickr from "react-flatpickr";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router";
 import Swal from "sweetalert2";
 import PackageImageCarousel from "../components/ImagesGallery";
 import useAuth from "../hooks/useAuth";
+import useAxiosSecure from "../hooks/useAxiosSecure";
+import { useQuery } from "@tanstack/react-query";
 
 export default function PackageDetails() {
   const { slug } = useParams();
   const navigate = useNavigate();
+  const axiosSecure = useAxiosSecure();
   const { user } = useAuth();
-  const [pkg, setPkg] = useState(null);
-  const [guides, setGuides] = useState([]);
-  const [role, setRole] = useState(null);
   const {
     register,
     handleSubmit,
@@ -23,35 +21,41 @@ export default function PackageDetails() {
     formState: { errors },
   } = useForm();
 
-
-  useEffect(() => {
-    axios.get(`http://localhost:3000/packages/${slug}`).then((res) => {
-      setPkg(res.data);
+  const { data: pkg = {}, isLoading: packageLoading, error: packageError } = useQuery({
+    queryKey: ["package-data"],
+    queryFn: async () => {
+      const res = await axiosSecure.get(`/packages/${slug}`);
       setValue("packageName", res.data.packageName);
       setValue("price", res.data.pricePerPerson);
-    });
+      return res.data;
+    },
+  });
 
-    axios.get("http://localhost:3000/tour-guides").then((res) => {
-      setGuides(res.data);
-    });
+  const { data: guides = [], isLoading: guideLoading, error: guideError } = useQuery({
+    queryKey: ["all-tour-guides"],
+    queryFn: async () => {
+      const res = await axiosSecure.get("/tour-guides");
+      return res.data;
+    },
+  });
 
-    axios.get(`http://localhost:3000/users/${user?.email}/role`).then((res) => {
-      setRole(res.data.role);
-    });
-  }, [slug, setValue, setRole, user]);
+  const { data: role = {}, isLoading: userRoleLoading, error: userRoleError } = useQuery({
+    queryKey: ["user-role"],
+    queryFn: async () => {
+      const res = await axiosSecure.get(`/users/${user?.email}/role`);
+      return res.data;
+    },
+  });
 
   // console.log(role);
   const onSubmit = async (data) => {
     if (!user) return navigate("/login");
 
-    if (role !== "tourist")
+    if (role.role !== "tourist")
       return Swal.fire("Error", "Only Tourist can book a tour", "error");
 
     // Find the guide by name
     const selectedGuide = guides.find((g) => g.name === data.tourGuideName);
-    if (!selectedGuide) {
-      return Swal.fire("Error", "Selected tour guide not found", "error");
-    }
 
     const bookingData = {
       packageName: pkg.packageName,
@@ -66,25 +70,28 @@ export default function PackageDetails() {
       status: "pending",
     };
 
-    try {
-      await axios.post(
-        "http://localhost:3000/bookings",
-        bookingData
-      );
-      Swal.fire({
-        icon: "success",
-        title: "Confirm your Booking",
-        text: "Your booking is submitted and pending approval.",
-        confirmButtonText: "Go to My Bookings",
-      }).then((res) => {
-        if (res.isConfirmed) navigate(`/dashboard/${user.email}/my-bookings`);
-      });
-    } catch (error) {
-      Swal.fire("Error", "Booking failed", "error");
-    }
+    await axiosSecure.post("/bookings", bookingData);
+    Swal.fire({
+      icon: "success",
+      title: "Confirm your Booking",
+      text: "Your booking is submitted and pending approval.",
+      confirmButtonText: "Go to My Bookings",
+    }).then((res) => {
+      if (res.isConfirmed) navigate(`/dashboard/${user.email}/my-bookings`);
+    });
   };
 
-  if (!pkg) return <div className="text-center mt-10 pt-32">Loading...</div>;
+  if (packageLoading || guideLoading || userRoleLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <span className="loading loading-ring loading-lg"></span>
+      </div>
+    );
+  }
+
+  if (packageError && guideError && userRoleError) {
+    return <p className="text-red-500">Error loading data.</p>;
+  }
 
   return (
     <div className="max-w-6xl mx-auto p-6 pt-24">

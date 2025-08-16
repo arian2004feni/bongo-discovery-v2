@@ -1,24 +1,39 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FaTimes } from "react-icons/fa";
 import { useNavigate } from "react-router";
 import { FacebookIcon, FacebookShareButton } from "react-share";
 import useAuth from "../hooks/useAuth"; // adjust if your path differs
+import useAxiosSecure from "../hooks/useAxiosSecure";
+import { useQuery } from "@tanstack/react-query";
 
 export default function CommunityPage() {
-  const [stories, setStories] = useState([]);
   const { user } = useAuth();
   const navigate = useNavigate();
+  const axiosSecure = useAxiosSecure();
   const [selectedStory, setSelectedStory] = useState(null);
 
   const openModal = (story) => setSelectedStory(story);
   const closeModal = () => setSelectedStory(null);
 
-  useEffect(() => {
-    axios.get("http://localhost:3000/stories/all")
-      .then(res => setStories(res.data))
-      .catch(err => console.error("Error fetching stories:", err));
-  }, []);
+  const {data: stories=[], isLoading, error} = useQuery({
+    queryKey: ['all-stories'],
+    queryFn: async() => {
+      const res = await axiosSecure.get('/stories/all');
+      return res.data;
+    }
+  })
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <span className="loading loading-ring loading-lg"></span>
+      </div>
+    );
+  }
+
+  if (error) {
+    return <p className="text-red-500">Error loading data.</p>;
+  }
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8 pt-32">
@@ -37,9 +52,9 @@ export default function CommunityPage() {
                 />
               ))}
             </div>
-            <h3 className="text-xl font-semibold mb-1">{story.title}</h3>
+            <h3 className="text-xl font-semibold mb-1 line-clamp-2">{story.title}</h3>
             <p className="text-sm text-gray-600 mb-2">by {story.name}</p>
-            <p className="text-gray-700 mb-3">{story.description?.slice(0, 150)}...</p>
+            <p className="text-gray-700 mb-3 line-clamp-3">{story.description}...</p>
 
             <div className="flex justify-between items-center">
               <button

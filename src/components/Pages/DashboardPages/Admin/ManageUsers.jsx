@@ -1,35 +1,28 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import useAuth from "../../../../hooks/useAuth";
 import Swal from "sweetalert2";
+import useAxiosSecure from "../../../../hooks/useAxiosSecure";
+import { useQuery } from "@tanstack/react-query";
 
 export default function ManageUsers() {
-  const [users, setUsers] = useState([]);
   const [roleFilter, setRoleFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const { user } = useAuth();
+  const axiosSecure = useAxiosSecure();
 
-  const fetchUsers = async () => {
-    try {
-      const res = await axios.get(
-        `http://localhost:3000/users`,
-        {
-          params: {
-            role: roleFilter !== "all" ? roleFilter : undefined,
-            search: searchQuery,
-          },
-        }
-      );
-      setUsers(res.data);
-    } catch (error) {
-      console.error("Error fetching users:", error);
+  const {data: users=[], refetch} = useQuery({
+    queryKey: ['all-users', searchQuery, roleFilter],
+    queryFn: async() => {
+      const res = await axiosSecure.get('/users', {
+        params: {
+          role: roleFilter !== "all" ? roleFilter : undefined,
+          search: searchQuery,
+        },
+      });
+      return res.data;
     }
-  };
-
-  useEffect(() => {
-    fetchUsers();
-  }, [roleFilter, searchQuery]);
+  })
 
   const handleDelete = async (userToDelete) => {
     const { isConfirmed } = await Swal.fire({
@@ -45,15 +38,11 @@ export default function ManageUsers() {
 
     try {
       // Delete from users collection
-      await axios.delete(
-        `http://localhost:3000/users/${userToDelete.email}`
-      );
+      await axiosSecure.delete(`/users/${userToDelete.email}`);
 
       // If guide, also delete from tour-guides
       if (userToDelete.role === "guide") {
-        await axios.delete(
-          `http://localhost:3000/tour-guides/${userToDelete.email}`
-        );
+        await axiosSecure.delete(`/tour-guides/${userToDelete.email}`);
       }
 
       Swal.fire({
@@ -62,7 +51,7 @@ export default function ManageUsers() {
         text: `${userToDelete.email} has been removed.`,
       });
 
-      fetchUsers(); // refresh the list
+      refetch(); // refresh the list
     } catch (err) {
       console.error("Error deleting user:", err);
       Swal.fire("Error", "Failed to delete user", "error");

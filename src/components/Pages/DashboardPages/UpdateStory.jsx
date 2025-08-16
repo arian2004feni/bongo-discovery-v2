@@ -1,27 +1,31 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { FaPlus, FaTimes } from "react-icons/fa";
 import { useNavigate, useParams } from "react-router";
 import Swal from "sweetalert2";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import { useQuery } from "@tanstack/react-query";
 
 export default function UpdateStory() {
   const { id } = useParams();
-  const [story, setStory] = useState(null);
   const [newImages, setNewImages] = useState([]);
   const [previewNew, setPreviewNew] = useState([]);
   const navigate = useNavigate();
+  const axiosSecure = useAxiosSecure();
   const { register, handleSubmit, reset } = useForm();
 
-  useEffect(() => {
-    axios.get(`http://localhost:3000/stories/${id}`).then((res) => {
-      setStory(res.data);
+  const { data: story = {}, refetch } = useQuery({
+    queryKey: ["update-story"],
+    queryFn: async () => {
+      const res = await axiosSecure.get(`/stories/${id}`);
       reset({
         title: res.data.title,
         description: res.data.description,
       });
-    });
-  }, [id, reset]);
+      return res.data;
+    },
+  });
 
   const removeOldImage = (imgUrl) => {
     Swal.fire({
@@ -30,18 +34,13 @@ export default function UpdateStory() {
       confirmButtonText: "Remove",
     }).then((res) => {
       if (res.isConfirmed) {
-        axios
-          .patch(`http://localhost:3000/stories/${id}/remove-image`, {
+        axiosSecure
+          .patch(`/stories/${id}/remove-image`, {
             url: imgUrl,
           })
           .then(() => {
-            setStory((prev) => ({
-              ...prev,
-              images: prev.images.filter((img) => img !== imgUrl),
-            }));
             Swal.fire("Removed!", "Image removed successfully.", "success");
-          })
-          .catch(() => Swal.fire("Error", "Failed to remove image.", "error"));
+          });
       }
     });
   };
@@ -76,32 +75,35 @@ export default function UpdateStory() {
         formData.append("image", file);
 
         const res = await axios.post(
-          `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_IMGBB_API_KEY}`,
+          `https://api.imgbb.com/1/upload?key=${
+            import.meta.env.VITE_IMGBB_API_KEY
+          }`,
           formData
         );
         uploadedUrls.push(res.data.data.url);
       }
 
       // 2. Update title/description
-      await axios.patch(`http://localhost:3000/stories/${id}`, {
+      await axiosSecure.patch(`/stories/${id}`, {
         title: data.title,
         description: data.description,
       });
 
       // 3. Add new images with $push
       if (uploadedUrls.length) {
-        await axios.patch(`http://localhost:3000/stories/${id}/add-images`, {
+        await axiosSecure.patch(`/stories/${id}/add-images`, {
           urls: uploadedUrls,
         });
       }
 
       Swal.close();
+      refetch();
       Swal.fire("Success!", "Story updated successfully.", "success");
       navigate("../manage-stories");
     } catch (err) {
       Swal.close();
       Swal.fire("Error", "Failed to update story.", "error");
-      // console.log(err);
+      console.log(err);
     }
   };
 

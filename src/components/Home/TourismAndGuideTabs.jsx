@@ -1,57 +1,52 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
-
-// Reusable retry fetch function
-const fetchWithRetry = async (url, retries = 3, delay = 1000) => {
-  for (let i = 0; i < retries; i++) {
-    try {
-      const res = await axios.get(url);
-      return res.data;
-    } catch (err) {
-      if (i === retries - 1) throw err;
-      await new Promise((res) => setTimeout(res, delay));
-    }
-  }
-};
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 export default function TourismAndGuideTabs() {
-  const [packages, setPackages] = useState([]);
-  const [guides, setGuides] = useState([]);
-  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const axiosSecure = useAxiosSecure();
 
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        const [pkgData, guideData] = await Promise.all([
-          fetchWithRetry("http://localhost:3000/packages/random"),
-          fetchWithRetry("http://localhost:3000/tour-guides/random"),
-        ]);
-        setPackages(pkgData);
-        setGuides(guideData);
-      } catch (err) {
-        console.error("❌ Failed to load homepage data:", err.message);
-      } finally {
-        setLoading(false); // Optional
-      }
-    };
+   // Fetch random packages
+  const {
+    data: randomPackages = [],
+    isLoading: isLoadingPackages,
+    error: packageError,
+  } = useQuery({
+    queryKey: ["random-packages"],
+    queryFn: async () => {
+      const res = await axiosSecure.get("/packages/random");
+      return res.data;
+    },
+  });
 
-    loadData();
-  }, []);
+  // Fetch random tour guides
+  const {
+    data: randomGuides = [],
+    isLoading: isLoadingGuides,
+    error: guideError,
+  } = useQuery({
+    queryKey: ["random-tour-guides"],
+    queryFn: async () => {
+      const res = await axiosSecure.get("/tour-guides/random");
+      return res.data;
+    },
+  });
 
-  // useEffect(() => {
-  //   axios
-  //     .get("http://localhost:3000/packages/random")
-  //     .then((res) => setPackages(res.data));
-  //   axios
-  //     .get("http://localhost:3000/tour-guides/random")
-  //     .then((res) => setGuides(res.data));
-  // }, []);
 
-  if (loading) return <div>Loading homepage data...</div>;
+  // if (isLoadingPackages || isLoadingGuides) return <div>Loading homepage data...</div>;
+  if (isLoadingPackages || isLoadingGuides) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <span className="loading loading-ring loading-lg"></span>
+      </div>
+    );
+  }
+
+  if (packageError && guideError) {
+    return <p className="text-red-500">Error loading data.</p>;
+  }
 
 
   return (
@@ -68,7 +63,7 @@ export default function TourismAndGuideTabs() {
         {/* === Packages === */}
         <TabPanel>
           <div className="grid md:grid-cols-3 gap-6">
-            {packages.map((pkg) => (
+            {randomPackages.map((pkg) => (
               <div key={pkg._id} className="card bg-base-100 shadow-md">
                 <figure>
                   <img
@@ -102,7 +97,7 @@ export default function TourismAndGuideTabs() {
         {/* === Tour Guides === */}
         <TabPanel>
           <div className="grid md:grid-cols-3 gap-6">
-            {guides.map((guide) => (
+            {randomGuides.map((guide) => (
               <div key={guide._id} className="card bg-base-300 pt-6 shadow-md">
                 <figure>
                   <img
@@ -116,9 +111,6 @@ export default function TourismAndGuideTabs() {
                 </figure>
                 <div className="card-body">
                   <h3 className="card-title">{guide.name}</h3>
-                  <p className="text-sm text-gray-500">
-                    {guide.address?.city}, {guide.address?.country}
-                  </p>
                   <p className="text-sm text-gray-500">
                     Specialty: {guide.applicationTitle}
                   </p>

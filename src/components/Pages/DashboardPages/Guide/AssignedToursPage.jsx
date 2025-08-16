@@ -1,40 +1,41 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import useAuth from "../../../../hooks/useAuth";
+import useAxiosSecure from "../../../../hooks/useAxiosSecure";
+import { useQuery } from "@tanstack/react-query";
 
 export default function AssignedToursPage() {
   const { user } = useAuth();
-  const [assignedTours, setAssignedTours] = useState([]);
+  const axiosSecure = useAxiosSecure();
 
-  const fetchAssignedTours = async () => {
-    try {
-      const res = await axios.get(
-        `http://localhost:3000/bookings/guide?tourGuideEmail=${user?.email}`
-      );
-      setAssignedTours(res.data);
-    } catch (error) {
-      console.error("Error fetching tours", error);
-    }
+  const formattedDate = (d) => {
+    const isoDate = d;
+    const date = new Date(isoDate);
+    const formatted = date.toLocaleDateString("en-GB"); // dd/mm/yyyy
+    // console.log(formatted);
+    return formatted;
   };
 
-  useEffect(() => {
-    if (user?.email) fetchAssignedTours();
-  }, [user]);
+  const { data: assignedTours = [], refetch } = useQuery({
+    queryKey: ["assigned-tours"],
+    queryFn: async () => {
+      const res = await axiosSecure.get(
+        `/bookings/guide?tourGuideEmail=${user?.email}`
+      );
+      return res.data;
+    },
+  });
 
-  const handleAccept = async (booking) => {
+  const handleAccept = (booking) => {
     if (booking.status !== "in-review") return;
 
-    try {
-      await axios.patch(`http://localhost:3000/bookings/${booking._id}/status`, {
+    axiosSecure
+      .patch(`/bookings/${booking._id}/status`, {
         status: "accepted",
-      });
+      })
+      .then((res) => console.log(res));
 
-      Swal.fire("Success", "Tour has been accepted!", "success");
-      fetchAssignedTours();
-    } catch (err) {
-      Swal.fire("Error", "Failed to accept tour", "error");
-    }
+    Swal.fire("Success", "Tour has been accepted!", "success");
+    refetch();
   };
 
   const handleReject = async (booking) => {
@@ -50,16 +51,12 @@ export default function AssignedToursPage() {
 
     if (!confirm.isConfirmed) return;
 
-    try {
-      await axios.patch(`http://localhost:3000/bookings/${booking._id}/status`, {
-        status: "rejected",
-      });
+    await axiosSecure.patch(`/bookings/${booking._id}/status`, {
+      status: "rejected",
+    });
 
-      Swal.fire("Rejected", "Tour has been rejected", "info");
-      fetchAssignedTours();
-    } catch (err) {
-      Swal.fire("Error", "Failed to reject tour", "error");
-    }
+    Swal.fire("Rejected", "Tour has been rejected", "info");
+    refetch();
   };
 
   return (
@@ -84,24 +81,29 @@ export default function AssignedToursPage() {
               <td>{idx + 1}</td>
               <td>{booking.packageName}</td>
               <td>{booking.touristName}</td>
-              <td>{booking.tourDate}</td>
+              <td>{formattedDate(booking.tourDate)}</td>
               <td>{booking.price}৳</td>
               <td className="capitalize">{booking.status}</td>
               <td className="flex gap-2 justify-center">
-                <button
-                  disabled={booking.status !== "in-review"}
-                  onClick={() => handleAccept(booking)}
-                  className="btn btn-sm btn-success disabled:opacity-50"
-                >
-                  Accept
-                </button>
-                <button
-                  disabled={booking.status !== "in-review"}
-                  onClick={() => handleReject(booking)}
-                  className="btn btn-sm btn-error disabled:opacity-50"
-                >
-                  Reject
-                </button>
+                {booking.status === "rejected" ? (
+                  "Rejected"
+                ) : (
+                  <>
+                    <button
+                      disabled={booking.status !== "in-review"}
+                      onClick={() => handleAccept(booking)}
+                      className="btn btn-sm btn-success disabled:opacity-50"
+                    >
+                      Accept
+                    </button>
+                    <button
+                      onClick={() => handleReject(booking)}
+                      className="btn btn-sm btn-error disabled:opacity-50"
+                    >
+                      Reject
+                    </button>
+                  </>
+                )}
               </td>
             </tr>
           ))}

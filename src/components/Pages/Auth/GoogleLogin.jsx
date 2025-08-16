@@ -1,13 +1,14 @@
-import axios from "axios";
 import { useLocation, useNavigate } from "react-router";
 import Swal from "sweetalert2";
 import { getFirebaseAuthErrorMessage } from "../../../../getFirebaseAuthErrorMessage";
 import useAuth from "../../../hooks/useAuth";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const GoogleLogin = () => {
   const { googleSignInUser, setLoading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const axiosSecure = useAxiosSecure();
 
   const handleGoogleLogin = () => {
     setLoading(true);
@@ -32,15 +33,15 @@ const GoogleLogin = () => {
           },
           email: user.email,
           photo: user.photoURL,
-          createdAt: new Date().toISOString(),
-          lastLogin: new Date().toISOString(),
+          createdAt: new Date(user.metadata.creationTime).toISOString(),
+          lastLogin: new Date(user.metadata.lastSignInTime).toISOString(),
           role: "tourist",
         };
 
-        axios
-          .post("http://localhost:3000/users", userData)
+        axiosSecure
+          .post("/users", userData)
           .then((res) => {
-            // console.log("User added:", res.data);
+            console.log("User added:", res.data);
           })
           .catch((err) => {
             console.error("Error adding user:", err);

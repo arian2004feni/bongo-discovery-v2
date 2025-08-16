@@ -1,16 +1,24 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import { FaUserEdit } from "react-icons/fa";
-import { useOutletContext } from "react-router";
 import useAuth from "../../../hooks/useAuth";
 import EditProfileModal from "./EditProfileModal";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import { useQuery } from "@tanstack/react-query";
 
 export default function ManageProfile() {
-  const { user } = useAuth(); // Firebase user
-  const data = useOutletContext();
-  const [userData, setUserData] = useState(data);
+  const { user } = useAuth();
   const [adminStats, setAdminStats] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
+
+  const axiosSecure = useAxiosSecure();
+
+  const { data: userData = {}, refetch } = useQuery({
+    queryKey: ["userInfo"],
+    queryFn: async () => {
+      const res = await axiosSecure.get(`/users/${user?.email}`);
+      return res.data;
+    },
+  });
 
   // console.log(userData);
 
@@ -24,33 +32,26 @@ export default function ManageProfile() {
   // }, [userData]);
 
   useEffect(() => {
-  if (userData?.role === "admin") {
-    setTimeout(() => {
-      setAdminStats({
-        totalPayment: 152500,
-        totalGuides: 12,
-        totalPackages: 36,
-        totalClients: 85,
-        totalStories: 29,
-      });
-    }, 500);
-  }
-}, [userData]);
+    if (userData?.role === "admin") {
+      setTimeout(() => {
+        setAdminStats({
+          totalPayment: 152500,
+          totalGuides: 12,
+          totalPackages: 36,
+          totalClients: 85,
+          totalStories: 29,
+        });
+      }, 500);
+    }
+  }, [userData]);
 
   if (!userData) return <div className="text-center py-8">Loading...</div>;
 
-  const {
-    firstName,
-    lastName,
-    email,
-    photo,
-    phoneNumber,
-    dateOfBirth,
-    role,
-  } = userData;
+  const { firstName, lastName, email, photo, phoneNumber, dateOfBirth, role } =
+    userData;
 
   return (
-    <div className="p-6 max-w-4xl mx-auto bg-base-200 rounded-2xl shadow-md">
+    <div className="p-6 max-w-4xl mx-auto bg-base-200 rounded-2xl shadow-md my-12">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold">Welcome, {firstName || "User"}!</h1>
         <button
@@ -79,7 +80,16 @@ export default function ManageProfile() {
       )}
 
       <div className="grid gap-4">
-        <img src={photo} alt={firstName} className="w-20 rounded-full border"/>
+        <img
+          src={photo}
+          alt={firstName}
+          className="size-20 object-cover rounded-full border"
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src =
+              "https://i.ibb.co/JX3zV4J/pngtree-vector-avatar-icon-png-image-889567-removebg-preview.png";
+          }}
+        />
         <p>
           <span className="font-semibold">Name:</span> {firstName} {lastName}
         </p>
@@ -108,11 +118,7 @@ export default function ManageProfile() {
         <EditProfileModal
           userData={userData}
           onClose={() => setIsOpen(false)}
-          refetch={() => {
-            axios
-              .get(`http://localhost:3000/users/${user.email}`)
-              .then((res) => setUserData(res.data));
-          }}
+          refetch={refetch}
         />
       )}
     </div>

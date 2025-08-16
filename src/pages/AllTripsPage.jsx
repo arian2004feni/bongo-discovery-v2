@@ -1,15 +1,33 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
 import { Link } from "react-router";
+import useAxiosSecure from "../hooks/useAxiosSecure";
+import { useQuery } from "@tanstack/react-query";
 
 export default function AllTripsPage() {
-  const [packages, setPackages] = useState([]);
+  const axiosSecure = useAxiosSecure();
 
-  useEffect(() => {
-    axios.get("http://localhost:3000/packages")
-      .then((res) => setPackages(res.data))
-      .catch((err) => console.error("Error fetching packages:", err));
-  }, []);
+  const {
+    data: packages = [],
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["all-packages"],
+    queryFn: async () => {
+      const res = await axiosSecure.get("/packages");
+      return res.data;
+    },
+  });
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <span className="loading loading-ring loading-lg"></span>
+      </div>
+    );
+  }
+
+  if (error) {
+    return <p className="text-red-500">Error loading data.</p>;
+  }
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-32">
@@ -24,7 +42,7 @@ export default function AllTripsPage() {
               className="w-full h-48 object-cover"
             />
             <div className="p-4">
-              <h3 className="text-xl font-semibold mb-1">{pkg.packageName}</h3>
+              <h3 className="text-xl font-semibold mb-1 line-clamp-1">{pkg.packageName}</h3>
               <p className="text-gray-600 mb-2">Duration: {pkg.tourDurationDays} days</p>
               <p className="text-primary font-bold mb-4">Price: {pkg.pricePerPerson}৳</p>
 

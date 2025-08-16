@@ -1,23 +1,18 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { useOutletContext } from "react-router";
 import Swal from "sweetalert2";
+import useAxiosSecure from "../../../../hooks/useAxiosSecure";
+import { useQuery } from "@tanstack/react-query";
 
 export default function ManageCandidates() {
-  const [applications, setApplications] = useState([]);
-  const userInfo = useOutletContext();
+  const axiosSecure = useAxiosSecure();
 
-  const fetchApplications = () => {
-    axios
-      .get("http://localhost:3000/tour-guide/applications?status=pending")
-      .then((res) => setApplications(res.data))
-      .catch((err) => console.error("Fetch error:", err));
-  };
-
-  useEffect(() => {
-    fetchApplications();
-  }, []);
-
+  const {data: applications=[], isLoading, isError, refetch} = useQuery({
+    queryKey: ['candidates'],
+    queryFn: async() => {
+      const res = await axiosSecure.get('/tour-guide/applications?status=pending');
+      return res.data
+    }
+  })
+  
   const handleAccept = async (app) => {
     const confirm = await Swal.fire({
       title: "Accept this application?",
@@ -31,13 +26,13 @@ export default function ManageCandidates() {
 
     try {
       // 1. Update user role
-      await axios.patch(`http://localhost:3000/users/${app.email}/role`, {
+      await axiosSecure.patch(`/users/${app.email}/role`, {
         role: "guide",
       });
 
       // 2. Update application status
-      await axios.patch(
-        `http://localhost:3000/tour-guide/applications/${app._id}/approve`
+      await axiosSecure.patch(
+        `/tour-guide/applications/${app._id}/approve`
       );
 
       // 3. Create tour guide record in separate collection
@@ -45,21 +40,16 @@ export default function ManageCandidates() {
         applicationTitle: app.applicationTitle,
         reason: app.reason,
         cvLink: app.cvLink,
-        email: app.email,
         name: app.name,
-        photo: userInfo?.photo || "", // from useOutletContext
-        address: userInfo?.address || {
-          country: "",
-          city: "",
-          postCode: "",
-        },
+        email: app.email,
+        photo: app.photo,
         addedAt: new Date().toISOString(),
       };
 
-      await axios.post("http://localhost:3000/tour-guides", guideInfo);
+      await axiosSecure.post("/tour-guides", guideInfo);
 
       // 4. Refresh list
-      fetchApplications();
+      refetch();
 
       Swal.fire("Accepted!", `${app.name} is now a Tour Guide.`, "success");
     } catch (error) {
@@ -81,12 +71,12 @@ export default function ManageCandidates() {
 
     try {
       // 1. Update status to rejected
-      await axios.patch(
-        `http://localhost:3000/tour-guide/applications/${app._id}/reject`
+      await axiosSecure.patch(
+        `/tour-guide/applications/${app._id}/reject`
       );
 
       // 2. Refresh list
-      fetchApplications();
+      refetch();
 
       Swal.fire("Rejected!", `Application has been rejected.`, "success");
     } catch (error) {
@@ -94,6 +84,19 @@ export default function ManageCandidates() {
       Swal.fire("Error", "Could not reject application", "error");
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <span className="loading loading-ring loading-lg"></span>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return <p className="text-red-500">Error loading data.</p>;
+  }
+
 
   return (
     <div className="overflow-x-auto p-4">
@@ -107,9 +110,9 @@ export default function ManageCandidates() {
         <table className="table table-zebra w-full">
           <thead>
             <tr>
+              <th>#</th>
               <th>Name</th>
               <th>Email</th>
-              <th>Current Role</th>
               <th>Application Title</th>
               <th>Reason</th>
               <th>CV Link</th>
@@ -117,11 +120,11 @@ export default function ManageCandidates() {
             </tr>
           </thead>
           <tbody>
-            {applications.map((app) => (
+            {applications.map((app, i) => (
               <tr key={app._id}>
+                <td>{i+1}</td>
                 <td>{app.name}</td>
                 <td>{app.email}</td>
-                <td>tourist</td>
                 <td>{app.applicationTitle}</td>
                 <td className="max-w-xs truncate" title={app.reason}>
                   {app.reason}
