@@ -2,10 +2,8 @@ import { RiUserSettingsLine } from "react-icons/ri";
 import { NavLink, Outlet, useParams } from "react-router";
 import DashboardSideNav from "../components/Common/DashboardSideNav";
 import Logo from "../components/Logo";
-import ThemeToggle from "../components/theme/ThemeToggle";
 import useAxiosSecure from "../hooks/useAxiosSecure";
 import { useQuery } from "@tanstack/react-query";
-import '../dashboard.css'
 
 const Dashboard = () => {
   const emailId = useParams();
@@ -48,7 +46,6 @@ const Dashboard = () => {
             <Logo />
           </div>
           <div className="">
-            <ThemeToggle />
           </div>
         </div>
         {/* Page content here */}
@@ -66,7 +63,6 @@ const Dashboard = () => {
           {/* Sidebar Logo */}
           <div className="mb-5 flex justify-between items-center">
             <Logo />
-            <ThemeToggle />
           </div>
           {/* Sidebar Navigation */}
           <li>

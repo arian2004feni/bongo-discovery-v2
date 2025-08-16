@@ -1,38 +1,43 @@
 @import "tailwindcss";
-@plugin "daisyui" {
-  themes: light --default, dark --prefersdark;
+@plugin "daisyui";
+@plugin "daisyui/theme" {
+  name: "arian2004";
+  default: true;
+  prefersdark: true;
+  color-scheme: "dark";
+  --color-base-100: oklch(100% 0 0);
+  --color-base-200: oklch(96.12% 0.000 0);
+  --color-base-300: oklch(94.21% 0.000 0);
+  --color-base-content: oklch(13% 0.028 261.692);
+  --color-primary: oklch(84.42% 0.172 84.93);
+  --color-primary-content: oklch(10.67% 0.000 0);
+  --color-secondary: oklch(67.50% 0.196 34.94);
+  --color-secondary-content: oklch(100% 0 0);
+  --color-accent: oklch(60.99% 0.211 257.52);
+  --color-accent-content: oklch(100% 0 0);
+  --color-neutral: oklch(10.67% 0.000 0);
+  --color-neutral-content: oklch(100% 0 0);
+  --color-info: oklch(54% 0.245 262.881);
+  --color-info-content: oklch(98% 0.003 247.858);
+  --color-success: oklch(63.43% 0.178 140.31);
+  --color-success-content: oklch(100% 0 0);
+  --color-warning: oklch(82% 0.189 84.429);
+  --color-warning-content: oklch(41% 0.112 45.904);
+  --color-error: oklch(55.60% 0.225 28.95);
+  --color-error-content: oklch(100% 0 0);
+  --radius-selector: 0.5rem;
+  --radius-field: 0.25rem;
+  --radius-box: 0.25rem;
+  --size-selector: 0.28125rem;
+  --size-field: 0.28125rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
 }
-
-@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
 @theme {
   --font-heading: "Bebas Neue", sans-serif;
   --font-paragraph: "Jost", sans-serif;
-  --color-prime: #007d4f;
-  --color-second: #0a7d9d;
-  --color-third: #ffc107;
-  --color-forth: #616161;
-  --color-bg: #f8f8f8;
-  --color-text: #212121;
-  --color-border: #e0e0e0;
-  --color-prime-content: #ffffff;
-  --color-second-content: #ffffff;
-  --color-third-content: #212121;
-  --color-forth-content: #f8f8f8;
-
-  --color-dark-prime: oklch(65% 0.15 160); /* Vibrant Delta Green: #3CB371 */
-  --color-dark-second: oklch(
-    65% 0.12 210
-  ); /* Electric River Blue: #4682B4 */
-  --color-dark-third: oklch(85% 0.1 95); /* Sunny Gold: #FFD700 */
-  --color-dark-forth: oklch(70% 0 0); /* Light Mist Grey: #B0B0B0 */
-  --color-dark-bg: oklch(8% 0 0); /* Deep Night Sky: #121212 */
-  --color-dark-text: oklch(100% 0 0); /* White text: #FFFFFF */
-  --color-dark-border: oklch(10% 0 0); /* Dark Ash Grey: #333333 */
-  --color-dark-prime-content: oklch(100% 0 0); /* White text on dark prime */
-  --color-dark-second-content: oklch(100% 0 0);
-  --color-dark-third-content: oklch(10% 0 0); 
-  --color-dark-forth-content: oklch(90% 0 0);
 }
 
 body {
