@@ -70,7 +70,7 @@ const Auth = ({ atTop, overHero }) => {
           </div>
           <ul
             tabIndex={0}
-            className="menu dropdown-content bg-base-200 text-black dark:text-white rounded-box z-1 mt-4 w-52 p-2 shadow-sm "
+            className="menu dropdown-content bg-base-200 text-white rounded-box z-1 mt-4 w-52 p-2 shadow-sm "
           >
             <span className="absolute bg-base-200 size-6 right-3 -top-1 rotate-45"></span>
             <li className="menu-title">
@@ -102,16 +102,16 @@ const Auth = ({ atTop, overHero }) => {
     <div className="mt-4 md:m-0">
       <Link
         to="/login"
-        className={`btn btn-ghost hover:bg-transparent outline-1 rounded-none -outline-offset-1 ${
+        className={`btn btn-primary hover:bg-transparent outline-1 h-10 -outline-offset-1 ${
           atTop && overHero
-            ? "outline-white hover:text-white"
-            : "outline-black dark:outline-white"
+            ? "outline-primary hover:text-primary btn-outline"
+            : "outline-primary"
         }  *:hover:bg-transparent rounded mx-2`}
       >
         Login
       </Link>
       <Link to="/register"
-        className="btn rounded-none border-prime shadow-none bg-prime dark:bg-dark-prime text-prime-content"
+        className="btn shadow-none btn-primary h-10"
       >
         Register
       </Link>

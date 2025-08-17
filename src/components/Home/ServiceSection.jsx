@@ -26,7 +26,7 @@ const ServiceSectionData = [
 
 const ServiceSection = () => {
   return (
-    <div className="bg-dark-prime dark:bg-third py-12">
+    <div className="bg-primary py-12">
       <div className="mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-0 xl:gap-8 ">
           {ServiceSectionData.map((service, index) => (

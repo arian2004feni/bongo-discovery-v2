@@ -38,7 +38,6 @@ export default function OverviewSection() {
                 triumphant return, we handle every detail, ensuring an
                 authentic, seamless, and unforgettable travel experience.
               </p>
-              <button className="btn btn-primary mt-4">Explore</button>
             </motion.div>
           </div>
         </div>
